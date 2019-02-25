@@ -1,0 +1,22 @@
+{
+  "name": "sslink",
+  "version": "1.0.0",
+  "description": "gen/parse Shadowsocks(R) link/QR/subscribe-link",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MamoruDS/sslink.git"
+  },
+  "keywords": [
+    "shadowsocks"
+  ],
+  "author": "MamoruDS",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MamoruDS/sslink/issues"
+  },
+  "homepage": "https://github.com/MamoruDS/sslink#readme"
+}
