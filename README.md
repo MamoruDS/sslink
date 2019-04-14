@@ -11,7 +11,7 @@ let ss = sslink.genSSLink('sample-server', {
 }, 'ssStyle')
 
 console.log(ss)
-//ss://eGNoYWNoYTIwLWlldGYtcG9seTEzMDU6cGFzc3dkQDAuMC4wLjA6ODQ0Mw==#sample-server
+// ss://eGNoYWNoYTIwLWlldGYtcG9seTEzMDU6cGFzc3dkQDAuMC4wLjA6ODQ0Mw==#sample-server
 
 ss = sslink.genSSLink('sample-server', {
     server: '0.0.0.0',
@@ -25,5 +25,5 @@ ss = sslink.genSSLink('sample-server', {
 }, 'ssrStyle')
 
 console.log(ss)
-//ss://eGNoYWNoYTIwLWlldGYtcG9seTEzMDU6cGFzc3dk@0.0.0.0:8443/?plugin=obfs-local%3Bobfs%3Dtls%3Bobfs-host%3Dgithub.com&group=R1JPVVAgTkFNRQ==#sample-server
+// ss://eGNoYWNoYTIwLWlldGYtcG9seTEzMDU6cGFzc3dk@0.0.0.0:8443/?plugin=obfs-local%3Bobfs%3Dtls%3Bobfs-host%3Dgithub.com&group=R1JPVVAgTkFNRQ==#sample-server
 ```
