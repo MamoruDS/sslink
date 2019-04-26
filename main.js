@@ -6,6 +6,11 @@ const clashProrGen = (propName, propValue, newline = true, indent = '  ') => {
     return propValue ? `${newline ? `\n` : ''}${indent}${propName}: ${propValue}` : ''
 }
 
+const surgeProrGen = (propValue, prefix, headComma = true) => {
+    prefix = prefix ? `${prefix}=` : ''
+    return propValue ? `${headComma ? ', ' : ''}${prefix}${propValue}` : ''
+}
+
 const encodeBase64 = (string) => {
     return Buffer.from(string).toString('base64')
 }
@@ -56,24 +61,31 @@ const confGenClashStyle = (tag, ssConfig = {}) => {
     let hostname = clashProrGen('server', ssConfig.server)
     let port = clashProrGen('type', ssConfig.server_port)
     let method = clashProrGen('cipher', ssConfig.method)
-    // let method = ssConfig.method
     let password = clashProrGen('password', ssConfig.password)
-    // let password = ssConfig.password
     let plugin = clashProrGen('plugin', ssConfig.plugin)
-    // let plugin = ssConfig.plugin
     let obfs = clashProrGen('mode', ssConfig.obfs)
-    // let obfs = ssConfig.obfs
     let obfsHost = clashProrGen('host', ssConfig.obfs_host)
-    // let obfsHost = ssConfig.obfs_host
-    // let group = ssConfig.group
     return `${name}${protocol}${hostname}${port}${method}${password}${obfs}${obfsHost}`
+}
+
+const confGenSurge3Style = (tag, ssConfig = {}) => {
+    let name = tag
+    let protocol = surgeProrGen(ssConfig.protocol, undefined, false)
+    let hostname = surgeProrGen(ssConfig.server)
+    let port = surgeProrGen(ssConfig.server_port)
+    let method = surgeProrGen(ssConfig.method, 'encrypt-method')
+    let password = surgeProrGen(ssConfig.password, 'password')
+    let plugin = surgeProrGen(ssConfig.plugin)
+    let obfs = surgeProrGen(ssConfig.obfs)
+    let obfsHost = surgeProrGen(ssConfig.obfs_host)
+    return `${name} = ${protocol}${hostname}${port}${method}${password}${obfs}${obfsHost}`
 }
 
 const linkGenStyle = {
     ssStyle: linkGenSSStyle,
     ssrStyle: linkGenSSRStyle,
-    clashStyle: confGenClashStyle
-    // surgeStyle: confGenSurgeStyle
+    clashStyle: confGenClashStyle,
+    surge3Style: confGenSurge3Style
 }
 
 sslink.genSSLink = (tag, ssConfig, mode = 'ssrStyle') => {
