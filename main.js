@@ -2,6 +2,10 @@ function sslink() {
 
 }
 
+const clashProrGen = (propName, propValue, newline = true, indent = '  ') => {
+    return propValue ? `${newline ? `\n` : ''}${indent}${propName}: ${propValue}` : ''
+}
+
 const encodeBase64 = (string) => {
     return Buffer.from(string).toString('base64')
 }
@@ -46,14 +50,30 @@ const linkGenSSRStyle = (tag, ssConfig = {}) => {
     return `${protocol}://${url}`
 }
 
-const ymlStyle = (tag, ssConfig = {}) => {
-
+const confGenClashStyle = (tag, ssConfig = {}) => {
+    let name = clashProrGen('name', tag, false, '- ')
+    let protocol = clashProrGen('type', ssConfig.protocol)
+    let hostname = clashProrGen('server', ssConfig.server)
+    let port = clashProrGen('type', ssConfig.server_port)
+    let method = clashProrGen('cipher', ssConfig.method)
+    // let method = ssConfig.method
+    let password = clashProrGen('password', ssConfig.password)
+    // let password = ssConfig.password
+    let plugin = clashProrGen('plugin', ssConfig.plugin)
+    // let plugin = ssConfig.plugin
+    let obfs = clashProrGen('mode', ssConfig.obfs)
+    // let obfs = ssConfig.obfs
+    let obfsHost = clashProrGen('host', ssConfig.obfs_host)
+    // let obfsHost = ssConfig.obfs_host
+    // let group = ssConfig.group
+    return `${name}${protocol}${hostname}${port}${method}${password}${obfs}${obfsHost}`
 }
 
 const linkGenStyle = {
     ssStyle: linkGenSSStyle,
     ssrStyle: linkGenSSRStyle,
-    ymlStyle: ymlStyle
+    clashStyle: confGenClashStyle
+    // surgeStyle: confGenSurgeStyle
 }
 
 sslink.genSSLink = (tag, ssConfig, mode = 'ssrStyle') => {
