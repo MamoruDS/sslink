@@ -114,6 +114,7 @@ sslink.genSSLink = (tag, ssConfig, mode = 'ssrStyle') => {
 
 sslink.parseSSLink = (linkStr) => {
     let ssConfig = {
+        tag: 'test-server',
         hostname: '',
         port: '',
         method: '',
@@ -143,6 +144,14 @@ sslink.parseSSLink = (linkStr) => {
         }
     } else {}
     return ssConfig
+}
+
+sslink.subscription = proxySet => {
+    let res = ''
+    for (let proxy of proxySet){
+        res = res + `${sslink.genSSLink(proxy.tag, proxy, 'ssrStyle')}\n`
+    }
+    return encodeBase64(res)
 }
 
 module.exports = sslink
