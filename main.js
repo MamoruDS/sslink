@@ -2,6 +2,8 @@ function sslink() {
 
 }
 
+const surge2SSEncryptModuleUrl = `https://github.com/MamoruDS/SSEncrypt/raw/master/SSEncrypt.module`
+
 const clashProrGen = (propName, propValue, newline = true, indent = '  ') => {
     return propValue ? `${newline ? `\n` : ''}${indent}${propName}: ${propValue}` : ''
 }
@@ -68,6 +70,22 @@ const confGenClashStyle = (tag, ssConfig = {}) => {
     return `${name}${protocol}${hostname}${port}${method}${password}${obfs}${obfsHost}`
 }
 
+const confGenSurge2Style = (tag, ssConfig = {}) => {
+    let name = tag
+    let protocol = (ssConfig.protocol === 'ss') ? 'custom' : ssConfig.protocol
+    protocol = surgeProrGen(protocol, undefined, false)
+    let hostname = surgeProrGen(ssConfig.server)
+    let port = surgeProrGen(ssConfig.server_port)
+    let method = surgeProrGen(ssConfig.method)
+    let password = surgeProrGen(ssConfig.password)
+    let SSmodule = (protocol === 'custom') ? surgeProrGen(surge2SSEncryptModuleUrl) : ''
+    let plugin = surgeProrGen(ssConfig.plugin)
+    let obfs = surgeProrGen(ssConfig.obfs, 'obfs')
+    let obfsHost = surgeProrGen(ssConfig.obfs_host, 'obfs-host')
+    return `${name} = ${protocol}${hostname}${port}${method}${password}${SSmodule}${obfs}${obfsHost}`
+}
+
+
 const confGenSurge3Style = (tag, ssConfig = {}) => {
     let name = tag
     let protocol = surgeProrGen(ssConfig.protocol, undefined, false)
@@ -76,8 +94,8 @@ const confGenSurge3Style = (tag, ssConfig = {}) => {
     let method = surgeProrGen(ssConfig.method, 'encrypt-method')
     let password = surgeProrGen(ssConfig.password, 'password')
     let plugin = surgeProrGen(ssConfig.plugin)
-    let obfs = surgeProrGen(ssConfig.obfs)
-    let obfsHost = surgeProrGen(ssConfig.obfs_host)
+    let obfs = surgeProrGen(ssConfig.obfs, 'obfs')
+    let obfsHost = surgeProrGen(ssConfig.obfs_host, 'obfs-host')
     return `${name} = ${protocol}${hostname}${port}${method}${password}${obfs}${obfsHost}`
 }
 
@@ -85,6 +103,7 @@ const linkGenStyle = {
     ssStyle: linkGenSSStyle,
     ssrStyle: linkGenSSRStyle,
     clashStyle: confGenClashStyle,
+    surge2Style: confGenSurge2Style,
     surge3Style: confGenSurge3Style
 }
 
