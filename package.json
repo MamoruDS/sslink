@@ -1,10 +1,10 @@
 {
   "name": "sslink",
-  "version": "1.0.1",
+  "version": "1.0.1-rc1",
   "description": "gen/parse Shadowsocks(R) link/QR/subscribe-link",
-  "main": "main.js",
+  "main": "dist/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dist": "tsc"
   },
   "repository": {
     "type": "git",
@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/MamoruDS/sslink/issues"
   },
-  "homepage": "https://github.com/MamoruDS/sslink#readme"
+  "homepage": "https://github.com/MamoruDS/sslink#readme",
+  "devDependencies": {
+    "@types/node": "^13.13.4"
+  }
 }
