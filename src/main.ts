@@ -1,3 +1,5 @@
+import * as yaml from 'yaml'
+
 import { decodeBase64, encodeBase64, Optional, assignDefault } from './utils'
 
 // type proxy = {
@@ -6,7 +8,7 @@ import { decodeBase64, encodeBase64, Optional, assignDefault } from './utils'
 
 type Protocols = 'ss' | 'trojan'
 
-type Parsers = 'quantumult'
+type Parsers = 'quantumult' | 'clash'
 
 class BaseProxy {
     public readonly server: string
@@ -221,4 +223,45 @@ export const quantumultParser = (proxy: SSProxy | TrojanProxy): string => {
     return undefined
 }
 
+export const clashParser = (proxy: SSProxy | TrojanProxy): string => {
+    if (proxy instanceof TrojanProxy) {
+        const _p = {} as {
+            [key in string]: string | number
+        }
+        _p['name'] = proxy.tag
+        _p['type'] = 'trojan'
+        _p['server'] = proxy.server
+        _p['port'] = proxy.port
+        _p['password'] = proxy.password
+        return yaml.stringify([_p])
+    }
+    if (proxy instanceof SSProxy) {
+        const _p = {} as {
+            [key in string]:
+                | string
+                | number
+                | {
+                      [key in string]: string
+                  }
+        }
+        _p['name'] = proxy.tag
+        _p['type'] = 'ss'
+        _p['server'] = proxy.server
+        _p['port'] = proxy.port
+        _p['cipher'] = proxy.method
+        _p['password'] = proxy.password
+        if (proxy.obfs.type) {
+            _p['plugin'] = 'obfs'
+            _p['plugin-opts'] = {
+                mode: proxy.obfs.type,
+                host: proxy.obfs.host,
+            }
+        }
+        // do not support v2ray for now
+        return yaml.stringify([_p])
+    }
+    return undefined
+}
+
 parsers['quantumult'] = quantumultParser
+parsers['clash'] = clashParser
