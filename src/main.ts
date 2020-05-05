@@ -100,7 +100,7 @@ export class SSProxy extends BaseProxy {
         port: number,
         method: SSMethods,
         password: string,
-        options?: Optional<SSOptions>
+        options: Optional<SSOptions> = {}
     ) {
         super(tag, server, port)
         const _options = assignDefault(defaultSSOptions, options)
@@ -134,7 +134,7 @@ type TrojanProxyCtor = {
         port: number,
         password: string,
         tls: boolean,
-        options?: Optional<TrojanOptions>
+        options: Optional<TrojanOptions>
     ): TrojanProxy
 }
 export class TrojanProxy extends BaseProxy {
@@ -153,7 +153,7 @@ export class TrojanProxy extends BaseProxy {
         port: number,
         password: string,
         tls: boolean = true,
-        options?: Optional<TrojanOptions>
+        options: Optional<TrojanOptions> = {}
     ) {
         super(tag, server, port)
         const _options = assignDefault(defaultTrojanOptions, options)
