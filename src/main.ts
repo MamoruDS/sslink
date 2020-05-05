@@ -21,8 +21,8 @@ class BaseProxy {
         this.port = port
     }
 
-    parse(parser: Parsers) {
-        return parsers[parser](this)
+    parse(parser: Parsers, options: object = {}) {
+        return parsers[parser](this, options)
     }
 }
 
@@ -169,7 +169,7 @@ export class TrojanProxy extends BaseProxy {
 }
 
 const parsers = {} as {
-    [key in string]: (item: BaseProxy) => string
+    [key in string]: (item: BaseProxy, options: object) => string | object
 }
 
 type parser<K extends string = ''> = K extends keyof typeof parsers ? K : never
@@ -223,7 +223,10 @@ export const quantumultParser = (proxy: SSProxy | TrojanProxy): string => {
     return undefined
 }
 
-export const clashParser = (proxy: SSProxy | TrojanProxy): string => {
+export const clashParser = (
+    proxy: SSProxy | TrojanProxy,
+    options: object = {}
+): string | object => {
     if (proxy instanceof TrojanProxy) {
         const _p = {} as {
             [key in string]: string | number
@@ -233,7 +236,11 @@ export const clashParser = (proxy: SSProxy | TrojanProxy): string => {
         _p['server'] = proxy.server
         _p['port'] = proxy.port
         _p['password'] = proxy.password
-        return yaml.stringify([_p])
+        return options['2obj']
+            ? _p
+            : options['2json']
+            ? JSON.stringify(_p)
+            : yaml.stringify([_p])
     }
     if (proxy instanceof SSProxy) {
         const _p = {} as {
@@ -258,7 +265,11 @@ export const clashParser = (proxy: SSProxy | TrojanProxy): string => {
             }
         }
         // do not support v2ray for now
-        return yaml.stringify([_p])
+        return options['2obj']
+            ? _p
+            : options['2json']
+            ? JSON.stringify(_p)
+            : yaml.stringify([_p])
     }
     return undefined
 }
