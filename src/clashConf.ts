@@ -72,6 +72,9 @@ export class ClashConf {
         }
         return undefined
     }
+    addProxyItem(item: SSProxy | TrojanProxy): void {
+        this._proxies.push(item)
+    }
     addRules(rules: ClashRuleA[]): void {
         this._rules = [...this._rules, ...rules]
     }
