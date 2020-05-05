@@ -76,7 +76,7 @@ const defaultSSOptions: Required<SSOptions> = {
     udp_relay: false,
 }
 
-type SSProxyCtor = {
+export type SSProxyCtor = {
     new (
         tag: string,
         server: string,
@@ -129,7 +129,7 @@ const defaultTrojanOptions: Required<TrojanOptions> = {
     udp_relay: false,
 }
 
-type TrojanProxyCtor = {
+export type TrojanProxyCtor = {
     new (
         tag: string,
         server: string,
