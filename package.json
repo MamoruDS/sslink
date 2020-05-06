@@ -1,6 +1,6 @@
 {
   "name": "sslink",
-  "version": "1.0.2",
+  "version": "1.0.3-rc1",
   "description": "gen/parse Shadowsocks(R) link/QR/subscribe-link",
   "main": "dist/main.js",
   "scripts": {
@@ -23,6 +23,8 @@
     "@types/node": "^13.13.4"
   },
   "dependencies": {
+    "@types/js-yaml": "^3.12.3",
+    "js-yaml": "^3.13.1",
     "yaml": "^1.9.2"
   }
 }

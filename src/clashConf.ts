@@ -1,5 +1,5 @@
 import { SSProxyCtor, SSProxy, TrojanProxyCtor, TrojanProxy } from './main'
-import * as yaml from 'yaml'
+import * as yaml from 'js-yaml'
 
 export type ClashRule = {
     type:
@@ -163,7 +163,7 @@ export class ClashConf {
         for (const _p of this._policies) {
             _conf['Proxy Group'].push(_p)
         }
-        return yaml.stringify(_conf)
+        return yaml.safeDump(_conf)
     }
     private _hasProxy = (tag: string): boolean => {
         return this._proxies.filter((p) => p.tag == tag).length != 0
