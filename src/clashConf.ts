@@ -76,7 +76,7 @@ export class ClashConf {
         this._proxies.push(item)
     }
     addRules(rules: ClashRuleA[]): void {
-        this._rules = [...this._rules, ...rules]
+        this._rules = [...rules, ...this._rules]
     }
     addPolicy(
         name: string,
