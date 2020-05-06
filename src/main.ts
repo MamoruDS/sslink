@@ -16,10 +16,16 @@ class BaseProxy {
     public readonly tag: string
     public policyGroup: string[]
 
-    constructor(tag: string, server: string, port: number) {
+    constructor(
+        tag: string,
+        server: string,
+        port: number,
+        policyGroup: string[] = []
+    ) {
         this.tag = tag
         this.server = server
         this.port = port
+        this.policyGroup = policyGroup
     }
 
     addPolicyGroup(groupname: string): void {
@@ -87,7 +93,8 @@ export type SSProxyCtor = {
         port: number,
         method: SSMethods,
         password: string,
-        options?: Optional<SSOptions>
+        options?: Optional<SSOptions>,
+        policyGroup?: string[]
     ): SSProxy
 }
 
@@ -106,9 +113,10 @@ export class SSProxy extends BaseProxy {
         port: number,
         method: SSMethods,
         password: string,
-        options: Optional<SSOptions> = {}
+        options: Optional<SSOptions> = {},
+        policyGroup: string[] = []
     ) {
-        super(tag, server, port)
+        super(tag, server, port, policyGroup)
         const _options = assignDefault(defaultSSOptions, options)
         this.method = method
         this.password = password
@@ -140,7 +148,8 @@ export type TrojanProxyCtor = {
         port: number,
         password: string,
         tls: boolean,
-        options: Optional<TrojanOptions>
+        options?: Optional<TrojanOptions>,
+        policyGroup?: string[]
     ): TrojanProxy
 }
 export class TrojanProxy extends BaseProxy {
@@ -159,9 +168,10 @@ export class TrojanProxy extends BaseProxy {
         port: number,
         password: string,
         tls: boolean = true,
-        options: Optional<TrojanOptions> = {}
+        options: Optional<TrojanOptions> = {},
+        policyGroup: string[] = []
     ) {
-        super(tag, server, port)
+        super(tag, server, port, policyGroup)
         const _options = assignDefault(defaultTrojanOptions, options)
         this.password = password
         this.tls = tls
