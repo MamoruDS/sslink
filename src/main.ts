@@ -14,6 +14,7 @@ class BaseProxy {
     public readonly server: string
     public readonly port: number
     public readonly tag: string
+    public policyGroup: string[]
 
     constructor(tag: string, server: string, port: number) {
         this.tag = tag
@@ -21,6 +22,9 @@ class BaseProxy {
         this.port = port
     }
 
+    addPolicyGroup(groupname: string): void {
+        this.policyGroup.push(groupname)
+    }
     parse(parser: Parsers, options: object = {}) {
         return parsers[parser](this, options)
     }
