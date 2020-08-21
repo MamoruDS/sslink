@@ -26,7 +26,7 @@ export type ClashRuleA = [
         | 'GEOIP'
         | 'DST-PORT'
         | 'SRC-PORT'
-        | 'FINAL'
+        | 'MATCH'
     ),
     string | number,
     'REJECT' | 'DIRECT' | string
@@ -150,18 +150,18 @@ export class ClashConf {
                 '<local>',
             ],
             'cfw-latency-timeout': 3000,
-            Proxy: [],
-            'Proxy Group': [],
-            Rule: [],
+            proxies: [],
+            'proxy-groups': [],
+            rules: [],
         }
         for (const _p of this._proxies) {
-            _conf.Proxy.push(_p.parse('clash', { '2obj': true }))
+            _conf['proxies'].push(_p.parse('clash', { '2obj': true }))
         }
         for (const _r of this._rules) {
-            _conf.Rule.push(_r.filter((v) => v != undefined).join(', '))
+            _conf['rules'].push(_r.filter((v) => v != undefined).join(', '))
         }
         for (const _p of this._policies) {
-            _conf['Proxy Group'].push(_p)
+            _conf['proxy-groups'].push(_p)
         }
         return yaml.safeDump(_conf)
     }
@@ -183,7 +183,7 @@ export const preset = (): ClashConf => {
         ['IP-CIDR', '192.168.0.0/16', 'DIRECT'],
         ['IP-CIDR', '224.0.0.0/24', 'DIRECT'],
         ['GEOIP', 'CN', 'DIRECT'],
-        ['FINAL', undefined, 'auto'],
+        ['MATCH', undefined, 'auto'],
     ])
     return _c
 }

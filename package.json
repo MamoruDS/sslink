@@ -1,30 +1,29 @@
 {
-  "name": "sslink",
-  "version": "1.0.3-rc1",
-  "description": "gen/parse Shadowsocks(R) link/QR/subscribe-link",
-  "main": "dist/main.js",
-  "scripts": {
-    "dist": "tsc"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/MamoruDS/sslink.git"
-  },
-  "keywords": [
-    "shadowsocks"
-  ],
-  "author": "MamoruDS",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/MamoruDS/sslink/issues"
-  },
-  "homepage": "https://github.com/MamoruDS/sslink#readme",
-  "devDependencies": {
-    "@types/node": "^13.13.4"
-  },
-  "dependencies": {
-    "@types/js-yaml": "^3.12.3",
-    "js-yaml": "^3.13.1",
-    "yaml": "^1.9.2"
-  }
+    "name": "sslink",
+    "version": "1.0.3",
+    "description": "gen/parse Shadowsocks(R) link/QR/subscribe-link",
+    "main": "dist/main.js",
+    "scripts": {
+        "dist": "tsc"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/MamoruDS/sslink.git"
+    },
+    "keywords": [
+        "shadowsocks"
+    ],
+    "author": "MamoruDS",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/MamoruDS/sslink/issues"
+    },
+    "homepage": "https://github.com/MamoruDS/sslink#readme",
+    "devDependencies": {
+        "@types/node": "^13.13.4",
+        "@types/js-yaml": "^3.12.3"
+    },
+    "dependencies": {
+        "js-yaml": "^3.13.1"
+    }
 }
