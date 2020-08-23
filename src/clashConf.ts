@@ -100,6 +100,10 @@ export class ClashConf {
         }
     }
     out(): string {
+        console.warn('Warning: Clash.ClashConf.out() is deprecated. Use Clash.ClashConf.toString() instead.')
+        return this.toString()
+    }
+    toString(): string {
         const _conf = {
             port: 7890,
             'socks-port': 7891,
