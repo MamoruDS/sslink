@@ -1,22 +1,9 @@
-import { SSProxyCtor, SSProxy, TrojanProxyCtor, TrojanProxy } from './main'
+import { SSProxyCtor, SSProxy } from './ss'
+import { TrojanProxyCtor, TrojanProxy } from './trojan'
+
 import * as yaml from 'js-yaml'
 
-export type ClashRule = {
-    type:
-        | 'DOMAIN-SUFFIX'
-        | 'DOMAIN-KEYWORD'
-        | 'DOMAIN'
-        | 'IP-CIDR'
-        | 'SRC-IP-CIDR'
-        | 'GEOIP'
-        | 'DST-PORT'
-        | 'SRC-PORT'
-        | 'FINAL'
-    value: string | number | undefined
-    policy: 'REJECT' | 'DIRECT' | string
-}
-
-export type ClashRuleA = [
+export type ClashRule = [
     (
         | 'DOMAIN-SUFFIX'
         | 'DOMAIN-KEYWORD'
@@ -42,7 +29,7 @@ export type ClashPolicy = {
 
 export class ClashConf {
     private _proxies: (SSProxy | TrojanProxy)[]
-    private _rules: ClashRuleA[]
+    private _rules: ClashRule[]
     private _policies: ClashPolicy[]
 
     constructor() {
@@ -75,7 +62,7 @@ export class ClashConf {
     addProxyItem(item: SSProxy | TrojanProxy): void {
         this._proxies.push(item)
     }
-    addRules(rules: ClashRuleA[]): void {
+    addRules(rules: ClashRule[]): void {
         this._rules = [...rules, ...this._rules]
     }
     addPolicy(
