@@ -1,3 +1,4 @@
+import { Optional, assignDefault } from './utils'
 import { SSProxyCtor, SSProxy } from './ss'
 import { TrojanProxyCtor, TrojanProxy } from './trojan'
 
@@ -25,6 +26,14 @@ export type ClashPolicy = {
     proxies: string[]
     url?: string // only for url-test & fallback types
     interval?: number // only for url-test & fallback types
+}
+
+type ConfOptions = {
+    cfw?: boolean
+}
+
+const defaultConfOptions: Required<ConfOptions> = {
+    cfw: false,
 }
 
 export class ClashConf {
@@ -100,10 +109,13 @@ export class ClashConf {
         }
     }
     out(): string {
-        console.warn('Warning: Clash.ClashConf.out() is deprecated. Use Clash.ClashConf.toString() instead.')
+        console.warn(
+            'Warning: Clash.ClashConf.out() is deprecated. Use Clash.ClashConf.toString() instead.'
+        )
         return this.toString()
     }
-    toString(): string {
+    toString(options: Optional<ConfOptions> = {}): string {
+        const _options = assignDefault(defaultConfOptions, options)
         const _conf = {
             port: 7890,
             'socks-port': 7891,
@@ -113,34 +125,33 @@ export class ClashConf {
             'log-level': 'info',
             'external-controller': '127.0.0.1:9090',
             secret: '',
-            experimental: {
-                'ignore-resolve-fail': true,
-            },
 
-            'cfw-bypass': [
-                'localhost',
-                '127.*',
-                '10.*',
-                '172.16.*',
-                '172.17.*',
-                '172.18.*',
-                '172.19.*',
-                '172.20.*',
-                '172.21.*',
-                '172.22.*',
-                '172.23.*',
-                '172.24.*',
-                '172.25.*',
-                '172.26.*',
-                '172.27.*',
-                '172.28.*',
-                '172.29.*',
-                '172.30.*',
-                '172.31.*',
-                '192.168.*',
-                '<local>',
-            ],
-            'cfw-latency-timeout': 3000,
+            'cfw-bypass': _options['cfw']
+                ? [
+                      'localhost',
+                      '127.*',
+                      '10.*',
+                      '172.16.*',
+                      '172.17.*',
+                      '172.18.*',
+                      '172.19.*',
+                      '172.20.*',
+                      '172.21.*',
+                      '172.22.*',
+                      '172.23.*',
+                      '172.24.*',
+                      '172.25.*',
+                      '172.26.*',
+                      '172.27.*',
+                      '172.28.*',
+                      '172.29.*',
+                      '172.30.*',
+                      '172.31.*',
+                      '192.168.*',
+                      '<local>',
+                  ]
+                : undefined,
+            'cfw-latency-timeout': _options['cfw'] ? 3000 : undefined,
             proxies: [],
             'proxy-groups': [],
             rules: [],
