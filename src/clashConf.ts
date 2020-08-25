@@ -165,6 +165,9 @@ export class ClashConf {
         for (const _p of this._policies) {
             _conf['proxy-groups'].push(_p)
         }
+        Object.keys(_conf).map((k) => {
+            if (typeof _conf[k] == 'undefined') delete _conf[k]
+        })
         return yaml.safeDump(_conf)
     }
     private _hasProxy = (tag: string): boolean => {
