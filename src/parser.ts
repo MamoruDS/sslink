@@ -1,9 +1,10 @@
 import * as yaml from 'yaml'
+import { SnellProxy } from './snell'
 import { SSProxy } from './ss'
 import { TrojanProxy } from './trojan'
 
 export const clashParser = (
-    proxy: SSProxy | TrojanProxy,
+    proxy: SnellProxy | SSProxy | TrojanProxy,
     options: object = {}
 ): string | object => {
     if (proxy instanceof TrojanProxy) {
@@ -44,6 +45,32 @@ export const clashParser = (
             }
         }
         // do not support v2ray for now
+        return options['2obj']
+            ? _p
+            : options['2json']
+            ? JSON.stringify(_p)
+            : yaml.stringify([_p])
+    }
+    if (proxy instanceof SnellProxy) {
+        const _p = {} as {
+            [key in string]:
+                | string
+                | number
+                | {
+                      [key in string]: string
+                  }
+        }
+        _p['name'] = proxy.tag
+        _p['type'] = 'snell'
+        _p['server'] = proxy.server
+        _p['port'] = proxy.port
+        _p['psk'] = proxy.psk
+        if (proxy.obfsMode) {
+            _p['obfs-opts'] = {
+                mode: proxy.obfsMode,
+                host: proxy.obfsHost,
+            }
+        }
         return options['2obj']
             ? _p
             : options['2json']
