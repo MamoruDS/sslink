@@ -17,7 +17,8 @@ export type SnellProxyCtor = {
         server: string,
         port: number,
         psk: string,
-        obfsOpts?: Optional<SnellOptions>
+        obfsOpts?: Optional<SnellOptions>,
+        policyGroup?: string[]
     ): SnellProxy
 }
 
