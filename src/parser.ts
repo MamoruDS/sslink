@@ -1,4 +1,4 @@
-import * as yaml from 'yaml'
+import * as yaml from 'js-yaml'
 import { SnellProxy } from './snell'
 import { SSProxy } from './ss'
 import { TrojanProxy } from './trojan'
@@ -20,7 +20,7 @@ export const clashParser = (
             ? _p
             : options['2json']
             ? JSON.stringify(_p)
-            : yaml.stringify([_p])
+            : yaml.dump([_p])
     }
     if (proxy instanceof SSProxy) {
         const _p = {} as {
@@ -49,7 +49,7 @@ export const clashParser = (
             ? _p
             : options['2json']
             ? JSON.stringify(_p)
-            : yaml.stringify([_p])
+            : yaml.dump([_p])
     }
     if (proxy instanceof SnellProxy) {
         const _p = {} as {
@@ -65,6 +65,9 @@ export const clashParser = (
         _p['server'] = proxy.server
         _p['port'] = proxy.port
         _p['psk'] = proxy.psk
+        if (typeof proxy.version != undefined) {
+            _p['version'] = proxy.version
+        }
         if (proxy.obfsMode) {
             _p['obfs-opts'] = {
                 mode: proxy.obfsMode,
@@ -75,7 +78,7 @@ export const clashParser = (
             ? _p
             : options['2json']
             ? JSON.stringify(_p)
-            : yaml.stringify([_p])
+            : yaml.dump([_p])
     }
     return undefined
 }
