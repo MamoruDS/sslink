@@ -163,7 +163,9 @@ export class ClashConf {
             _conf['rules'].push(_r.filter((v) => v != undefined).join(', '))
         }
         for (const _p of this._policies) {
-            _conf['proxy-groups'].push(_p)
+            if (_p.proxies.length > 0) {
+                _conf['proxy-groups'].push(_p)
+            }
         }
         Object.keys(_conf).map((k) => {
             if (typeof _conf[k] == 'undefined') delete _conf[k]
