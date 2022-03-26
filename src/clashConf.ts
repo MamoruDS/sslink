@@ -168,7 +168,7 @@ export class ClashConf {
         Object.keys(_conf).map((k) => {
             if (typeof _conf[k] == 'undefined') delete _conf[k]
         })
-        return yaml.safeDump(_conf)
+        return yaml.dump(_conf)
     }
     private _hasProxy = (tag: string): boolean => {
         return this._proxies.filter((p) => p.tag == tag).length != 0
