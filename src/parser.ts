@@ -3,6 +3,14 @@ import { SnellProxy } from './snell'
 import { SSProxy } from './ss'
 import { TrojanProxy } from './trojan'
 
+const optionalArgs = (key: string, val?: any): string => {
+    if (typeof val != 'undefined') {
+        return key + '=' + val
+    } else {
+        return undefined
+    }
+}
+
 export const clashParser = (
     proxy: SnellProxy | SSProxy | TrojanProxy,
     options: object = {}
@@ -128,6 +136,31 @@ export const quantumultParser = (proxy: SSProxy | TrojanProxy): string => {
             if (_p[k]) res.push(k + '=' + _p[k])
         })
         return res.join(', ')
+    }
+    return undefined
+}
+
+export const surgeParser = (
+    proxy: SnellProxy | SSProxy | TrojanProxy
+): string => {
+    if (proxy instanceof SnellProxy) {
+    }
+    if (proxy instanceof SSProxy) {
+    }
+    if (proxy instanceof TrojanProxy) {
+        const p: (string | number)[] = []
+        p.push('trojan')
+        p.push(proxy.server)
+        p.push(proxy.port)
+        p.push(optionalArgs('password', proxy.password))
+        p.push(optionalArgs('udp-relay', proxy.udpRelay))
+        p.push(optionalArgs('skip-cert-verify', proxy.certVerify))
+        p.push(optionalArgs('tfo', proxy.fastOpen))
+        return (
+            proxy.tag +
+            '=' +
+            p.filter((x) => typeof x != 'undefined').join(', ')
+        )
     }
     return undefined
 }
