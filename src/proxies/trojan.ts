@@ -1,4 +1,5 @@
 import * as yaml from 'js-yaml'
+import { NotSupportedError } from '../constants'
 import { Supported } from '../types'
 import { optionalArgs as oa, undefinedFreeJoin } from '../utils'
 import { BaseProxy } from './base'
@@ -14,7 +15,7 @@ type TrojanProperties = {
 }
 
 class TrojanProxy extends BaseProxy<TrojanProperties> {
-    parse(platform: Supported): string | undefined {
+    public parse(platform: Supported): string | undefined {
         if (platform === Supported.Clash) {
             const p = {} as {
                 [key in string]: string | number
@@ -25,8 +26,7 @@ class TrojanProxy extends BaseProxy<TrojanProperties> {
             p['port'] = this.prop.port
             p['password'] = this.prop.password
             return yaml.dump([p])
-        }
-        if (platform === Supported.Surge) {
+        } else if (platform === Supported.Surge) {
             const p: (string | number)[] = []
             p.push('trojan')
             p.push(this.prop.server)
@@ -36,8 +36,9 @@ class TrojanProxy extends BaseProxy<TrojanProperties> {
             p.push(oa('skip-cert-verify', this.prop.certVerify))
             p.push(oa('tfo', this.prop.fast_open))
             return this.prop.tag + ' = ' + undefinedFreeJoin(p, ', ')
+        } else {
+            throw new NotSupportedError(platform)
         }
-        return
     }
 }
 

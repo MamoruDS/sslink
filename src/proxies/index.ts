@@ -47,10 +47,12 @@ class ProxyCtr<T extends BaseProxy = BaseProxy> {
 class _Proxies {
     public readonly body: string
     private readonly _platform: Supported
+
     constructor(platform: Supported, body: string) {
         this.body = body
         this._platform = platform
     }
+
     toString(): string {
         if (this._platform === Supported.Clash) {
             return ['---', 'proxies:', this.body, '...'].join('\n')

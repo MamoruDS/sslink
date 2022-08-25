@@ -1,4 +1,5 @@
 import * as yaml from 'js-yaml'
+import { NotSupportedError } from '../constants'
 import { Supported } from '../types'
 import { optionalArgs as oa, undefinedFreeJoin } from '../utils'
 import { BaseProxy } from './base'
@@ -45,7 +46,7 @@ type SSProperties = {
 }
 
 class SSProxy extends BaseProxy<SSProperties> {
-    parse(platform: Supported): string | undefined {
+    public parse(platform: Supported): string | undefined {
         if (platform === Supported.Clash) {
             const p = {} as {
                 [key in string]:
@@ -70,8 +71,7 @@ class SSProxy extends BaseProxy<SSProperties> {
             }
             // do not support v2ray for now
             return yaml.dump([p])
-        }
-        if (platform === Supported.Surge) {
+        } else if (platform === Supported.Surge) {
             const p: (string | number)[] = []
             p.push('ss')
             p.push(this.prop.server)
@@ -83,8 +83,9 @@ class SSProxy extends BaseProxy<SSProperties> {
             p.push(oa('udp-relay', this.prop.udp_relay ? 'true' : undefined))
             p.push(oa('tfo', this.prop.fast_open ? 'true' : undefined))
             return this.prop.tag + ' = ' + undefinedFreeJoin(p, ', ')
+        } else {
+            throw new NotSupportedError(platform)
         }
-        return
     }
 }
 

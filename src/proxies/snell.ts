@@ -15,7 +15,7 @@ type SnellProperties = {
 }
 
 class SnellProxy extends BaseProxy<SnellProperties> {
-    parse(platform: Supported): string {
+    public parse(platform: Supported): string {
         if (platform === Supported.Clash) {
             const p: Record<
                 string,
