@@ -6,6 +6,7 @@ import {
 import { parse_valid_policy_item, ValidPolicyItem } from './policies'
 import {
     CountryCode,
+    CTR,
     IP_Based_Rules,
     Port_Based_Rules,
     RuleType,
@@ -52,7 +53,7 @@ class Rule {
             if (this.type === RuleType.COMMENT) {
                 return '# ' + this.prop.comment
             } else {
-                const rule = RULE_SUPPORT_MAP_SURGE[this.type]
+                const rule = RULE_SUPPORT_MAP_CLASH[this.type]
                 return (
                     undefinedFreeJoin(
                         [rule, this.prop.value, proxy, ...options],
@@ -84,13 +85,7 @@ class Rule {
     }
 }
 
-class RuleCtr {
-    private _rules: Rule[]
-
-    constructor() {
-        this._rules = []
-    }
-
+class RuleCtr extends CTR<Rule> {
     add(
         ruleType: IP_Based_Rules,
         value: CountryCode,
@@ -143,12 +138,12 @@ class RuleCtr {
         }
 
         const rule = new Rule(ruleType, prop)
-        this._rules.push(rule)
+        this._items.push(rule)
         return rule
     }
 
     public stringify(platform: Supported): string {
-        const rules = this._rules.map((rule) => rule.parse(platform))
+        const rules = this._stringify(platform)
         return undefinedFreeJoin(rules, '\n')
     }
 }
