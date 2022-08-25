@@ -1,4 +1,5 @@
-import { Supported } from '../types'
+import {  Supported } from '../types'
+import { CTR } from '../utils'
 import {
     parse_valid_policy_item,
     BasePolicy,
@@ -6,19 +7,9 @@ import {
     ValidPolicyItem,
 } from './base'
 
-class PolicyCtr {
-    private _policies: BasePolicy[]
-
-    constructor() {
-        this._policies = []
-    }
-
-    public add(policy: BasePolicy): void {
-        this._policies.push(policy)
-    }
-
-    public stringify(platform: Supported): string {
-        return this._policies.map((policy) => policy.parse(platform)).join('\n')
+class PolicyCtr<T extends BasePolicy = BasePolicy> extends CTR<T> {
+    public add(policy: T): void {
+        this._items.push(policy)
     }
 }
 

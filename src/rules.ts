@@ -6,13 +6,12 @@ import {
 import { parse_valid_policy_item, ValidPolicyItem } from './policies'
 import {
     CountryCode,
-    CTR,
     IP_Based_Rules,
     Port_Based_Rules,
     RuleType,
     Supported,
 } from './types'
-import { undefinedFreeJoin } from './utils'
+import { CTR, undefinedFreeJoin } from './utils'
 
 type IP_Based_Options = {
     no_resolve?: boolean
@@ -140,11 +139,6 @@ class RuleCtr extends CTR<Rule> {
         const rule = new Rule(ruleType, prop)
         this._items.push(rule)
         return rule
-    }
-
-    public stringify(platform: Supported): string {
-        const rules = this._stringify(platform)
-        return undefinedFreeJoin(rules, '\n')
     }
 }
 
