@@ -1,3 +1,27 @@
+interface _PlatItem {
+    parse(platform: Supported): string
+}
+
+class CTR<T extends _PlatItem> {
+    protected _items: T[]
+
+    constructor() {
+        this._items = []
+    }
+
+    get items(): T[] {
+        return this._items
+    }
+
+    public push(...items: T[]): void {
+        this._items.push(...items)
+    }
+
+    protected _stringify(platform: Supported): string[] {
+        return this._items.map((item) => item.parse(platform))
+    }
+}
+
 class SpecialProxy {
     private readonly _name: string
     constructor(name: string) {
@@ -294,5 +318,5 @@ type CountryCode = //ISO 3166
     | 'CW'
     | 'LAN' // Clash only
 
-export { SpecialProxy }
+export { CTR, SpecialProxy }
 export { CountryCode, IP_Based_Rules, Port_Based_Rules, RuleType, Supported }
