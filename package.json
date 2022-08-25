@@ -1,10 +1,10 @@
 {
     "name": "sslink",
-    "version": "1.0.5",
-    "description": "gen/parse Shadowsocks(R) link/QR/subscribe-link",
-    "main": "dist/main.js",
+    "version": "1.1.0",
+    "description": "",
+    "main": "dist/index.js",
     "scripts": {
-        "dist": "tsc"
+        "build": "tsc"
     },
     "repository": {
         "type": "git",
