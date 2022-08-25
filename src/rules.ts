@@ -50,12 +50,17 @@ class Rule {
         } // TODO:
         if (platform === Supported.Clash) {
             if (this.type === RuleType.COMMENT) {
-                return
+                return '# ' + this.prop.comment
             } else {
-                const rule = RULE_SUPPORT_MAP_CLASH[this.type]
-                return undefinedFreeJoin(
-                    [rule, this.prop.value, proxy, ...options],
-                    ', '
+                const rule = RULE_SUPPORT_MAP_SURGE[this.type]
+                return (
+                    undefinedFreeJoin(
+                        [rule, this.prop.value, proxy, ...options],
+                        ', '
+                    ) +
+                    (typeof this.prop.comment == 'string'
+                        ? ` # ${this.prop.comment}`
+                        : '')
                 )
             }
         } else if (platform === Supported.Surge) {
