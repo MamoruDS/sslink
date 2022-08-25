@@ -137,7 +137,7 @@ class RuleCtr extends CTR<Rule> {
         }
 
         const rule = new Rule(ruleType, prop)
-        this._items.push(rule)
+        this.push(rule)
         return rule
     }
 }

@@ -9,7 +9,7 @@ import {
 
 class PolicyCtr<T extends BasePolicy = BasePolicy> extends CTR<T> {
     public add(policy: T): void {
-        this._items.push(policy)
+        this.push(policy)
     }
 }
 

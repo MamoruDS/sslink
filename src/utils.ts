@@ -3,11 +3,14 @@ import { Supported } from './types'
 interface _PlatItem {
     parse(platform: Supported): string
 }
+
 class CTR<T extends _PlatItem> {
     protected _items: T[]
+    protected _push_ignore_repeat: boolean
 
     constructor() {
         this._items = []
+        this._push_ignore_repeat = false
     }
 
     get items(): T[] {
@@ -15,7 +18,14 @@ class CTR<T extends _PlatItem> {
     }
 
     public push(...items: T[]): void {
-        this._items.push(...items)
+        for (const item of items) {
+            if (!this._push_ignore_repeat) {
+                if (this._items.includes(item)) {
+                    continue
+                }
+            }
+            this._items.push(item)
+        }
     }
 
     protected _stringify(platform: Supported): string[] {

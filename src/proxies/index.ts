@@ -9,7 +9,7 @@ type SupportedProxy = SSProxy | SnellProxy | TrojanProxy
 
 class ProxyCtr<T extends BaseProxy = BaseProxy> extends CTR<T> {
     public add(proxy: T): void {
-        this._items.push(proxy)
+        this.push(proxy)
     }
 
     public with_group(group: string): T[] {
