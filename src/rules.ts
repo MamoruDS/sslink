@@ -1,3 +1,4 @@
+import * as yaml from 'js-yaml'
 import {
     NotSupportedError,
     RULE_SUPPORT_MAP_CLASH,
@@ -139,6 +140,17 @@ class RuleCtr extends CTR<Rule> {
         const rule = new Rule(ruleType, prop)
         this.push(rule)
         return rule
+    }
+
+    public stringify(platform: Supported): string {
+        const rules = this._stringify(platform)
+        if (platform === Supported.Clash) {
+            return yaml.dump(rules)
+        } else if (platform === Supported.Surge) {
+            return rules.join('\n')
+        } else {
+            throw new NotSupportedError(platform)
+        }
     }
 }
 
