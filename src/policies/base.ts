@@ -25,6 +25,16 @@ class BasePolicy {
     public readonly name: string
     protected _items: ValidPolicyItem[]
 
+    public get items(): ValidPolicyItem[] {
+        return this._items
+    }
+
+    public get proxies(): BaseProxy[] {
+        return this._items.filter(
+            (item) => item instanceof BaseProxy
+        ) as BaseProxy[]
+    }
+
     constructor(name: string, items: ValidPolicyItem[] = []) {
         this.name = name
         this._items = items
