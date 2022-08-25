@@ -17,8 +17,11 @@ class CTR<T extends _PlatItem> {
         return this._items
     }
 
-    public push(...items: T[]): void {
+    public push(...items: (T | undefined)[]): void {
         for (const item of items) {
+            if (typeof item === 'undefined') {
+                continue
+            }
             if (!this._push_ignore_repeat) {
                 if (this._items.includes(item)) {
                     continue
