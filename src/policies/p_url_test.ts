@@ -4,25 +4,26 @@ import { Supported } from '../types'
 import { optionalArgs, undefinedFreeJoin } from '../utils'
 import { BasePolicy, ValidPolicyItem } from './base'
 
-class LoadBalancePolicyProperties {
-    url?: string
-    interval?: number
-    persistent?: boolean // surge only
+class UrlTestPolicyProperties {
+    url: string
+    interval: number
+    tolerance?: number
+    timeout?: number
 }
 
-class LoadBalancePolicy extends BasePolicy {
-    public properties: LoadBalancePolicyProperties
+class UrlTestPolicy extends BasePolicy {
+    public properties: UrlTestPolicyProperties
 
     constructor(
         name: string,
-        properties: LoadBalancePolicyProperties,
+        properties: UrlTestPolicyProperties,
         items: ValidPolicyItem[] = []
     ) {
         super(name, items)
         this.properties = properties
     }
 
-    get prop(): LoadBalancePolicyProperties {
+    get prop(): UrlTestPolicyProperties {
         return this.properties
     }
 
@@ -31,7 +32,7 @@ class LoadBalancePolicy extends BasePolicy {
         if (platform === Supported.Clash) {
             const p = {
                 name: this.name,
-                type: 'load-balance',
+                type: 'url-test',
                 url: this.prop.url,
                 interval: this.prop.interval,
                 proxies,
@@ -39,11 +40,11 @@ class LoadBalancePolicy extends BasePolicy {
             return yaml.dump([p])
         } else if (platform === Supported.Surge) {
             const p: string[] = []
-            p.push('load-balance')
+            p.push('url-test')
             p.push(...proxies)
-            p.push(
-                optionalArgs('persistent', this.prop.interval ? 1 : undefined)
-            )
+            p.push(optionalArgs('interval', this.prop.interval))
+            p.push(optionalArgs('tolerance', this.prop.tolerance))
+            p.push(optionalArgs('timeout', this.prop.timeout))
             return this.name + ' = ' + undefinedFreeJoin(p, ', ')
         } else {
             throw new NotSupportedError(platform)
@@ -51,4 +52,4 @@ class LoadBalancePolicy extends BasePolicy {
     }
 }
 
-export { LoadBalancePolicy }
+export { UrlTestPolicy }
