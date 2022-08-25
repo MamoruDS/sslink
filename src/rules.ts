@@ -108,7 +108,7 @@ class RuleCtr extends CTR<Rule> {
         comment?: string
     ): Rule
     add(
-        ruleType: RuleType.DEST_PORT | RuleType.SRC_PORT,
+        ruleType: RuleType,
         value: string,
         proxy: ValidPolicyItem,
         comment?: string
