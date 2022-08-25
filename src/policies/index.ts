@@ -1,4 +1,3 @@
-import {  Supported } from '../types'
 import { CTR } from '../utils'
 import {
     parse_valid_policy_item,
@@ -10,6 +9,14 @@ import {
 class PolicyCtr<T extends BasePolicy = BasePolicy> extends CTR<T> {
     public add(policy: T): void {
         this.push(policy)
+    }
+
+    public get(name: string): T | undefined {
+        for (const policy of this._items) {
+            if (policy.name === name) {
+                return policy
+            }
+        }
     }
 }
 
