@@ -26,6 +26,8 @@ class ProxyCtr<T extends BaseProxy = BaseProxy> extends CTR<T> {
             })
         } else if (platform === Supported.Surge) {
             return new TextPack('surge.proxies', proxies)
+        } else if (platform === Supported.QuantumultX) {
+            return new TextPack('quantumultX.proxies', proxies)
         } else {
             throw new NotSupportedError(platform)
         }
