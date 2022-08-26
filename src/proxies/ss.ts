@@ -62,7 +62,7 @@ class SSProxy extends BaseProxy<SSProperties> {
             p['port'] = this.prop.port
             p['cipher'] = this.prop.method
             p['password'] = this.prop.password
-            if (typeof this.prop.obfs_plugin.type !== 'undefined') {
+            if (typeof this.prop.obfs_plugin?.type !== 'undefined') {
                 p['plugin'] = 'obfs'
                 p['plugin-opts'] = {
                     mode: this.prop.obfs_plugin.type,
@@ -83,6 +83,33 @@ class SSProxy extends BaseProxy<SSProperties> {
             p.push(oa('udp-relay', this.prop.udp_relay ? 'true' : undefined))
             p.push(oa('tfo', this.prop.fast_open ? 'true' : undefined))
             return this.prop.tag + ' = ' + undefinedFreeJoin(p, ', ')
+        } else if (platform === Supported.QuantumultX) {
+            const p = {} as Record<string, string | number | boolean | null>
+            p['shadowsocks'] = this.prop.server + ':' + this.prop.port
+            p['method'] = this.prop.method
+            p['password'] = this.prop.password
+            if (typeof this.prop.obfs_plugin?.type !== 'undefined') {
+                p['obfs'] = this.prop.obfs_plugin.type
+                p['obfs-host'] = this.prop.obfs_plugin.host ?? null
+                p['obfs-uri'] =
+                    this.prop.obfs_plugin.type === 'http'
+                        ? '/resource/file'
+                        : null
+            } else if (typeof this.prop.v2ray_plugin?.type !== 'undefined') {
+                p['obfs'] = this.prop.v2ray_plugin.tls ? 'wss' : 'ws'
+                p['obfs-host'] = this.prop.v2ray_plugin.host ?? null
+                p['obfs-uri'] = this.prop.v2ray_plugin.tls ? '/ws' : null
+                p['tls13'] = this.prop.v2ray_plugin.tls13 || null
+            }
+            p['udp-relay'] = this.prop.udp_relay
+            p['fast-open'] = this.prop.fast_open
+            p['tag'] = this.prop.tag
+            return undefinedFreeJoin(
+                Object.keys(p).map((key) => {
+                    if (p[key] !== null) return key + '=' + p[key]
+                }),
+                ', '
+            )
         } else {
             throw new NotSupportedError(platform)
         }

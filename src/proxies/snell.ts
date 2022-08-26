@@ -51,6 +51,8 @@ class SnellProxy extends BaseProxy<SnellProperties> {
             p.push(oa('version', this.prop.version))
             p.push(oa('tfo', this.prop.fast_open))
             return this.prop.tag + ' = ' + undefinedFreeJoin(p, ', ')
+        } else if (platform === Supported.QuantumultX) {
+            return '' // TODO:
         } else {
             throw new NotSupportedError(platform)
         }

@@ -29,6 +29,7 @@ type Port_Based_Rules = RuleType.DEST_PORT | RuleType.SRC_PORT
 enum Supported {
     Clash,
     Surge,
+    QuantumultX,
 }
 
 type CountryCode = //ISO 3166
