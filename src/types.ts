@@ -23,6 +23,8 @@ enum RuleType {
     COMMENT,
 }
 
+type RecStr<T> = Record<string, T>
+
 type IP_Based_Rules = RuleType.IP_CIDR | RuleType.IP_CIDR_6 | RuleType.GEOIP
 type Port_Based_Rules = RuleType.DEST_PORT | RuleType.SRC_PORT
 
@@ -296,4 +298,11 @@ type CountryCode = //ISO 3166
     | 'LAN' // Clash only
 
 export { SpecialProxy }
-export { CountryCode, IP_Based_Rules, Port_Based_Rules, RuleType, Supported }
+export {
+    CountryCode,
+    IP_Based_Rules,
+    Port_Based_Rules,
+    RecStr,
+    RuleType,
+    Supported,
+}
