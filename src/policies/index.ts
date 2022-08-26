@@ -1,3 +1,6 @@
+import { NotSupportedError } from '../constants'
+import { TextPack } from '../textpack'
+import { Supported } from '../types'
 import { CTR } from '../utils'
 import {
     parse_valid_policy_item,
@@ -16,6 +19,19 @@ class PolicyCtr<T extends BasePolicy = BasePolicy> extends CTR<T> {
             if (policy.name === name) {
                 return policy
             }
+        }
+    }
+
+    public stringify(platform: Supported): TextPack {
+        const policies = this._stringify(platform).join('\n')
+        if (platform === Supported.Clash) {
+            return new TextPack('clash.policies', policies, (t) => {
+                return t.replace(/^/, 'proxy-groups:\n')
+            })
+        } else if (platform === Supported.Surge) {
+            return new TextPack('surge.policies', policies)
+        } else {
+            throw new NotSupportedError(platform)
         }
     }
 }

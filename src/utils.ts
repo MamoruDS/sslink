@@ -1,3 +1,4 @@
+import { TextPack } from './textpack'
 import { Supported } from './types'
 
 interface _PlatItem {
@@ -35,8 +36,8 @@ class CTR<T extends _PlatItem> {
         return this._items.map((item) => item.parse(platform))
     }
 
-    public stringify(platform: Supported): string {
-        return this._stringify(platform).join('\n')
+    public stringify(platform: Supported): TextPack {
+        return new TextPack('unknown', this._stringify(platform).join('\n'))
     }
 }
 

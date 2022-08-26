@@ -5,6 +5,7 @@ import {
     RULE_SUPPORT_MAP_SURGE,
 } from './constants'
 import { parse_valid_policy_item, ValidPolicyItem } from './policies'
+import { TextPack } from './textpack'
 import {
     CountryCode,
     IP_Based_Rules,
@@ -142,12 +143,14 @@ class RuleCtr extends CTR<Rule> {
         return rule
     }
 
-    public stringify(platform: Supported): string {
+    public stringify(platform: Supported): TextPack {
         const rules = this._stringify(platform)
         if (platform === Supported.Clash) {
-            return yaml.dump(rules)
+            return new TextPack('clash.rules', yaml.dump(rules), (t) => {
+                return t.replace(/^/, 'rules:\n')
+            })
         } else if (platform === Supported.Surge) {
-            return rules.join('\n')
+            return new TextPack('surge.rules', rules.join('\n'))
         } else {
             throw new NotSupportedError(platform)
         }
