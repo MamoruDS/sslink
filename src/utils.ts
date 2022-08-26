@@ -20,7 +20,7 @@ class CTR<T extends _PlatItem> {
 
     public push(...items: (T | undefined)[]): void {
         for (const item of items) {
-            if (typeof item === 'undefined') {
+            if (isUndef(item)) {
                 continue
             }
             if (!this._push_ignore_repeat) {
@@ -42,7 +42,7 @@ class CTR<T extends _PlatItem> {
 }
 
 const isUndef = (x: any): boolean => {
-    return typeof x == 'undefined'
+    return typeof x === 'undefined'
 }
 
 const optionalArgs = (key: string, val?: any): string => {

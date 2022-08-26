@@ -1,7 +1,7 @@
 import * as yaml from 'js-yaml'
 import { NotSupportedError } from '../constants'
 import { Supported } from '../types'
-import { optionalArgs as oa, undefinedFreeJoin } from '../utils'
+import { isUndef, optionalArgs as oa, undefinedFreeJoin } from '../utils'
 import { BaseProxy } from './base'
 
 type SSMethods =
@@ -48,6 +48,7 @@ type SSProperties = {
 class SSProxy extends BaseProxy<SSProperties> {
     public parse(platform: Supported): string | undefined {
         if (platform === Supported.Clash) {
+            // ref: https://lancellc.gitbook.io/clash/clash-config-file/proxies/config-a-shadowsocks-proxy
             const p = {} as {
                 [key in string]:
                     | string
@@ -62,7 +63,7 @@ class SSProxy extends BaseProxy<SSProperties> {
             p['port'] = this.prop.port
             p['cipher'] = this.prop.method
             p['password'] = this.prop.password
-            if (typeof this.prop.obfs_plugin?.type !== 'undefined') {
+            if (!isUndef(this.prop.obfs_plugin?.type)) {
                 p['plugin'] = 'obfs'
                 p['plugin-opts'] = {
                     mode: this.prop.obfs_plugin.type,
@@ -72,6 +73,7 @@ class SSProxy extends BaseProxy<SSProperties> {
             // do not support v2ray for now
             return yaml.dump([p])
         } else if (platform === Supported.Surge) {
+            // ref: https://manual.nssurge.com/policy/proxy.html
             const p: (string | number)[] = []
             p.push('ss')
             p.push(this.prop.server)
@@ -84,18 +86,19 @@ class SSProxy extends BaseProxy<SSProperties> {
             p.push(oa('tfo', this.prop.fast_open ? 'true' : undefined))
             return this.prop.tag + ' = ' + undefinedFreeJoin(p, ', ')
         } else if (platform === Supported.QuantumultX) {
+            // ref: https://github.com/crossutility/Quantumult-X/blob/d30a160eb093b3be175ea5eeeff0648db50b2a20/sample.conf#L131
             const p = {} as Record<string, string | number | boolean | null>
             p['shadowsocks'] = this.prop.server + ':' + this.prop.port
             p['method'] = this.prop.method
             p['password'] = this.prop.password
-            if (typeof this.prop.obfs_plugin?.type !== 'undefined') {
+            if (!isUndef(this.prop.obfs_plugin?.type)) {
                 p['obfs'] = this.prop.obfs_plugin.type
                 p['obfs-host'] = this.prop.obfs_plugin.host ?? null
                 p['obfs-uri'] =
                     this.prop.obfs_plugin.type === 'http'
                         ? '/resource/file'
                         : null
-            } else if (typeof this.prop.v2ray_plugin?.type !== 'undefined') {
+            } else if (!isUndef(this.prop.v2ray_plugin?.type)) {
                 p['obfs'] = this.prop.v2ray_plugin.tls ? 'wss' : 'ws'
                 p['obfs-host'] = this.prop.v2ray_plugin.host ?? null
                 p['obfs-uri'] = this.prop.v2ray_plugin.tls ? '/ws' : null

@@ -68,7 +68,7 @@ class TrojanProxy extends BaseProxy<TrojanProperties> {
             p.push(oa('tfo', this.prop.fastOpen))
             return this.prop.tag + ' = ' + undefinedFreeJoin(p, ', ')
         } else if (platform === Supported.QuantumultX) {
-            // ref: https://github.com/crossutility/Quantumult-X/blob/master/sample.conf#L158
+            // ref: https://github.com/crossutility/Quantumult-X/blob/d30a160eb093b3be175ea5eeeff0648db50b2a20/sample.conf#L159
             const p = {} as RecStr<string | number | boolean | null>
             p['trojan'] = this.prop.server + ':' + this.prop.port
             p['password'] = this.prop.password ?? null

@@ -17,6 +17,7 @@ type SnellProperties = {
 class SnellProxy extends BaseProxy<SnellProperties> {
     public parse(platform: Supported): string {
         if (platform === Supported.Clash) {
+            // ref: https://lancellc.gitbook.io/clash/clash-config-file/proxies/config-a-snell-proxy
             const p: Record<
                 string,
                 | string
@@ -41,6 +42,7 @@ class SnellProxy extends BaseProxy<SnellProperties> {
             }
             return yaml.dump([p])
         } else if (platform === Supported.Surge) {
+            // ref: https://manual.nssurge.com/policy/proxy.html
             const p: (string | number)[] = []
             p.push('snell')
             p.push(this.prop.server)

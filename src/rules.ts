@@ -13,7 +13,7 @@ import {
     RuleType,
     Supported,
 } from './types'
-import { CTR, undefinedFreeJoin } from './utils'
+import { CTR, isUndef, undefinedFreeJoin } from './utils'
 
 type IP_Based_Options = {
     no_resolve?: boolean
@@ -41,11 +41,11 @@ class Rule {
 
     public parse(platform: Supported): string | undefined {
         let proxy = undefined
-        if (typeof this.prop.proxy != 'undefined') {
+        if (!isUndef(this.prop.proxy)) {
             proxy = parse_valid_policy_item(this.prop.proxy, platform)
         }
         const options = []
-        if (typeof this.prop.options != 'undefined') {
+        if (!isUndef(this.prop.options)) {
             if (this.prop.options?.no_resolve ?? false) {
                 options.push('no-resolve')
             }
