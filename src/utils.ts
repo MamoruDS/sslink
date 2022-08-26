@@ -41,6 +41,10 @@ class CTR<T extends _PlatItem> {
     }
 }
 
+const isUndef = (x: any): boolean => {
+    return typeof x == 'undefined'
+}
+
 const optionalArgs = (key: string, val?: any): string => {
     if (typeof val != 'undefined') {
         return key + '=' + val
@@ -57,4 +61,4 @@ const undefinedFreeJoin = <T = any>(
     return arr.filter((x) => typeof x != 'undefined').join(separator)
 }
 
-export { CTR, optionalArgs, undefinedFreeJoin }
+export { CTR, isUndef, optionalArgs, undefinedFreeJoin }
