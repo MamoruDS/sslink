@@ -1,31 +1,36 @@
 import * as yaml from 'js-yaml'
 import { NotSupportedError } from '../constants'
 import { RecStr, Supported } from '../types'
-import { isUndef, optionalArgs as oa, undefinedFreeJoin } from '../utils'
+import { optionalArgs as oa, undefinedFreeJoin } from '../utils'
 import { BaseProxy } from './base'
 
-type WebsocketConfig = {
+type TransportWSConfig = {
     path?: string
     headers?: RecStr<string>
 }
 
+type Transport = 'ws'
+
+type TransportProp<T extends Transport> = T extends 'ws'
+    ? { protocol: T } & TransportWSConfig
+    : never
 // ref: https://trojan-gfw.github.io/trojan/config
 type TrojanProperties = {
     username?: string
     password?: string
     tls?: boolean
     certVerify: boolean
-    tls13?: boolean
+    tls13?: boolean // quanx only
     sni?: string
     fastOpen: boolean
     udpRelay: boolean
-    websocket?: WebsocketConfig
+    transport?: TransportProp<Transport>
     alpn?: string[] // ['h2', 'http/1.1']
 }
 
 class TrojanProxy extends BaseProxy<TrojanProperties> {
     public parse(platform: Supported): string | undefined {
-        const WS = !isUndef(this.prop.websocket)
+        // const WS = !isUndef(this.prop.websocket)
         if (platform === Supported.Clash) {
             // ref: https://lancellc.gitbook.io/clash/clash-config-file/proxies/config-a-torjan-proxy
             const p = {} as RecStr<any | undefined>
@@ -34,12 +39,17 @@ class TrojanProxy extends BaseProxy<TrojanProperties> {
             p['server'] = this.prop.server
             p['port'] = this.prop.port
             p['password'] = this.prop.password
-            p['network'] = WS ? 'ws' : undefined
             p['skip-cert-verify'] = !this.prop.certVerify || undefined
             p['sni'] = this.prop.sni || undefined
             p['alpn'] = this.prop.alpn || undefined
             p['udp'] = this.prop.udpRelay || undefined
-            p['ws-opts'] = this.prop.websocket
+            if (this.prop.transport.protocol === 'ws') {
+                p['network'] = 'ws'
+                p['ws-opts'] = {
+                    path: this.prop.transport.path,
+                    headers: this.prop.transport.headers,
+                }
+            }
             return yaml.dump([p])
         } else if (platform === Supported.Surge) {
             // ref: https://manual.nssurge.com/policy/proxy.html
@@ -50,15 +60,15 @@ class TrojanProxy extends BaseProxy<TrojanProperties> {
             p.push(oa('password', this.prop.password))
             p.push(oa('skip-cert-verify', !this.prop.certVerify || undefined))
             p.push(oa('sni', this.prop.sni))
-            if (WS) {
+            if (this.prop.transport.protocol === 'ws') {
                 p.push(oa('ws', true))
-                p.push(oa('ws-path', this.prop.websocket.path))
+                p.push(oa('ws-path', this.prop.transport.path))
                 p.push(
                     oa(
                         'ws-headers',
-                        Object.keys(this.prop.websocket?.headers ?? {})
-                            .map((key) => {
-                                return `${key}:"${this.prop.websocket.headers[key]}"`
+                        Object.entries(this.prop.transport.headers ?? {})
+                            .map(([key, val]) => {
+                                return `${key}:"${val}"`
                             })
                             .join('|') || undefined
                     )
