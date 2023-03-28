@@ -55,6 +55,8 @@ class SnellProxy extends BaseProxy<SnellProperties> {
             return this.prop.tag + ' = ' + undefinedFreeJoin(p, ', ')
         } else if (platform === Supported.QuantumultX) {
             return '' // TODO:
+        } else if (platform === Supported.Loon) {
+            return '' // TODO:
         } else {
             throw new NotSupportedError(platform)
         }
