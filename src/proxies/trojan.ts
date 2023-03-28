@@ -50,14 +50,14 @@ class TrojanProxy extends BaseProxy<TrojanProperties> {
             p['sni'] = this.prop.sni || undefined
             p['alpn'] = this.prop.alpn || undefined
             p['udp'] = this.prop.udpRelay || undefined
-            if (this.prop.transport.protocol === 'ws') {
+            if (this.prop.transport?.protocol === 'ws') {
                 p['network'] = 'ws'
                 p['ws-opts'] = {
                     path: this.prop.transport.path,
                     headers: this.prop.transport.headers,
                 }
             }
-            if (this.prop.transport.protocol === 'grpc') {
+            if (this.prop.transport?.protocol === 'grpc') {
                 p['network'] = 'grpc'
                 p['grpc-opts'] = {
                     serviceName: this.prop.transport.serviceName,
@@ -73,7 +73,7 @@ class TrojanProxy extends BaseProxy<TrojanProperties> {
             p.push(oa('password', this.prop.password))
             p.push(oa('skip-cert-verify', !this.prop.certVerify || undefined))
             p.push(oa('sni', this.prop.sni))
-            if (this.prop.transport.protocol === 'ws') {
+            if (this.prop.transport?.protocol === 'ws') {
                 p.push(oa('ws', true))
                 p.push(oa('ws-path', this.prop.transport.path))
                 p.push(
