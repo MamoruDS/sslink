@@ -18,6 +18,7 @@ class ProxyCtr<T extends BaseProxy = BaseProxy> extends CTR<T> {
         return this._items.filter((proxy) => proxy.prop.groups.includes(group))
     }
 
+    // TODO: is this necessary?
     public stringify(platform: Supported): TextPack {
         const proxies = this._stringify(platform).join('\n')
         if (platform === Supported.Clash) {
@@ -27,6 +28,12 @@ class ProxyCtr<T extends BaseProxy = BaseProxy> extends CTR<T> {
         } else if (platform === Supported.Surge) {
             return new TextPack('surge.proxies', proxies)
         } else if (platform === Supported.QuantumultX) {
+            return new TextPack('quantumultX.proxies', proxies)
+        } else if (platform === Supported.Loon) {
+            return new TextPack('quantumultX.proxies', proxies)
+        } else if (platform === Supported.Surfboard) {
+            return new TextPack('quantumultX.proxies', proxies)
+        } else if (platform === Supported.Stash) {
             return new TextPack('quantumultX.proxies', proxies)
         } else {
             throw new NotSupportedError(platform)
