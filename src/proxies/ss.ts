@@ -113,6 +113,21 @@ class SSProxy extends BaseProxy<SSProperties> {
                 }),
                 ', '
             )
+        } else if(platform === Supported.Loon){
+            // ref: https://loon0x00.github.io/LoonManual/#/cn/node
+            const p: (string | number)[] = []
+            p.push('Shadowsocks')
+            p.push(this.prop.server)
+            p.push(this.prop.port)
+            p.push(this.prop.method)
+            p.push(`"${this.prop.password}"`)
+            if (!isUndef(this.prop.obfs_plugin?.type)) {
+                p.push(oa('obfs-name', this.prop.obfs_plugin.type))
+                p.push(oa('obfs-host', this.prop.obfs_plugin.host))
+            }
+            p.push(oa('fast-open', this.prop.fast_open ? 'true' : undefined))
+            p.push(oa('udp', this.prop.udp_relay ? 'true' : undefined))
+            return this.prop.tag + ' = ' + undefinedFreeJoin(p, ',')
         } else {
             throw new NotSupportedError(platform)
         }
