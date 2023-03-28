@@ -32,6 +32,9 @@ enum Supported {
     Clash,
     Surge,
     QuantumultX,
+    Loon,
+    Surfboard,
+    Stash,
 }
 
 type CountryCode = //ISO 3166
