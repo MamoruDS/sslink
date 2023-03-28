@@ -108,6 +108,31 @@ class TrojanProxy extends BaseProxy<TrojanProperties> {
                 }),
                 ', '
             )
+        } else if (platform === Supported.Loon) {
+            // https://loon0x00.github.io/LoonManual/#/cn/node
+            const p: (string | number)[] = []
+            p.push('trojan')
+            p.push(this.prop.server)
+            p.push(this.prop.port)
+            p.push(`"${this.prop.password ?? ''}"`)
+            p.push(
+                oa(
+                    'alpn',
+                    (this.prop.alpn ?? []).length > 0
+                        ? this.prop.alpn.join(',') // TODO: separator unknown
+                        : undefined
+                )
+            )
+            p.push(oa('skip-cert-verify', !this.prop.certVerify || undefined))
+            p.push(oa('tls-name', this.prop.sni))
+            p.push(oa('fast-open', this.prop.fastOpen))
+            p.push(oa('udp', this.prop.udpRelay))
+            if (this.prop.transport?.protocol === 'ws') {
+                p.push(oa('transport', 'ws'))
+                p.push(oa('path', this.prop.transport.path))
+                p.push(oa('host', this.prop.transport.headers?.Host))
+            }
+            return this.prop.tag + ' = ' + undefinedFreeJoin(p, ',')
         } else {
             throw new NotSupportedError(platform)
         }
