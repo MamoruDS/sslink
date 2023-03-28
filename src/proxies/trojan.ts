@@ -9,11 +9,18 @@ type TransportWSConfig = {
     headers?: RecStr<string>
 }
 
-type Transport = 'ws'
+type TransportGRPCConfig = {
+    serviceName?: string
+}
+
+type Transport = 'ws' | 'grpc'
 
 type TransportProp<T extends Transport> = T extends 'ws'
     ? { protocol: T } & TransportWSConfig
+    : T extends 'grpc'
+    ? { protocol: T } & TransportGRPCConfig
     : never
+
 // ref: https://trojan-gfw.github.io/trojan/config
 type TrojanProperties = {
     username?: string
@@ -48,6 +55,12 @@ class TrojanProxy extends BaseProxy<TrojanProperties> {
                 p['ws-opts'] = {
                     path: this.prop.transport.path,
                     headers: this.prop.transport.headers,
+                }
+            }
+            if (this.prop.transport.protocol === 'grpc') {
+                p['network'] = 'grpc'
+                p['grpc-opts'] = {
+                    serviceName: this.prop.transport.serviceName,
                 }
             }
             return yaml.dump([p])
