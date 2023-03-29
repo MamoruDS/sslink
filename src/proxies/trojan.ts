@@ -47,8 +47,8 @@ class TrojanProxy extends BaseProxy<TrojanProperties> {
             p['port'] = this.prop.port
             p['password'] = this.prop.password
             p['skip-cert-verify'] = !this.prop.certVerify || undefined
-            p['sni'] = this.prop.sni || undefined
-            p['alpn'] = this.prop.alpn || undefined
+            p['sni'] = this.prop.sni
+            p['alpn'] = this.prop.alpn
             p['udp'] = this.prop.udpRelay || undefined
             if (this.prop.transport?.protocol === 'ws') {
                 p['network'] = 'ws'
