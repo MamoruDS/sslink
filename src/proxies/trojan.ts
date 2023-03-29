@@ -133,6 +133,32 @@ class TrojanProxy extends BaseProxy<TrojanProperties> {
                 p.push(oa('host', this.prop.transport.headers?.Host))
             }
             return this.prop.tag + ' = ' + undefinedFreeJoin(p, ',')
+        } else if (platform === Supported.Stash) {
+            // ref: https://lancellc.gitbook.io/clash/clash-config-file/proxies/config-a-torjan-proxy
+            const p = {} as RecStr<string | number | boolean | RecStr<any>>
+            p['name'] = this.prop.tag
+            p['type'] = 'trojan'
+            p['server'] = this.prop.server
+            p['port'] = this.prop.port
+            p['password'] = this.prop.password
+            p['skip-cert-verify'] = !this.prop.certVerify || undefined
+            p['sni'] = this.prop.sni
+            p['alpn'] = this.prop.alpn
+            p['udp'] = this.prop.udpRelay || undefined
+            if (this.prop.transport?.protocol === 'ws') {
+                p['network'] = 'ws'
+                p['ws-opts'] = {
+                    path: this.prop.transport.path,
+                    headers: this.prop.transport.headers,
+                }
+            }
+            if (this.prop.transport?.protocol === 'grpc') {
+                p['network'] = 'grpc'
+                p['grpc-opts'] = {
+                    serviceName: this.prop.transport.serviceName,
+                }
+            }
+            return yaml.dump([p])
         } else {
             throw new NotSupportedError(platform)
         }
