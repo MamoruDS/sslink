@@ -5,7 +5,7 @@ import { isUndef, optionalArgs as oa, undefinedFreeJoin } from '../utils'
 import { BaseProxy } from './base'
 
 type SSMethods =
-    | 'rc4'
+    | 'rc4' // -stash
     | 'rc4-md5'
     | 'aes-128-gcm'
     | 'aes-192-gcm'
@@ -113,7 +113,7 @@ class SSProxy extends BaseProxy<SSProperties> {
                 }),
                 ', '
             )
-        } else if(platform === Supported.Loon){
+        } else if (platform === Supported.Loon) {
             // ref: https://loon0x00.github.io/LoonManual/#/cn/node
             const p: (string | number)[] = []
             p.push('Shadowsocks')
