@@ -131,6 +131,27 @@ class SSProxy extends BaseProxy<SSProperties> {
             p.push(oa('fast-open', this.prop.fast_open ? 'true' : undefined))
             p.push(oa('udp', this.prop.udp_relay ? 'true' : undefined))
             return this.prop.tag + ' = ' + undefinedFreeJoin(p, ',')
+        } else if (platform === Supported.Stash) {
+            // ref: https://stash.wiki/en/proxy-protocols/proxy-types#shadowsocks
+            const p = {} as Record<
+                string,
+                string | number | Record<string, string>
+            >
+            p['name'] = this.prop.tag
+            p['type'] = 'ss'
+            p['server'] = this.prop.server
+            p['port'] = this.prop.port
+            p['cipher'] = this.prop.method
+            p['password'] = `'${this.prop.password}'`
+            if (!isUndef(this.prop.obfs_plugin?.type)) {
+                p['plugin'] = 'obfs'
+                p['plugin-opts'] = {
+                    mode: this.prop.obfs_plugin.type,
+                    host: this.prop.obfs_plugin.host,
+                }
+            }
+            // do not support v2ray for now
+            return yaml.dump([p])
         } else {
             throw new NotSupportedError(platform)
         }
