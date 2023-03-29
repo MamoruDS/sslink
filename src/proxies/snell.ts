@@ -18,14 +18,10 @@ class SnellProxy extends BaseProxy<SnellProperties> {
     public parse(platform: Supported): string {
         if (platform === Supported.Clash) {
             // ref: https://lancellc.gitbook.io/clash/clash-config-file/proxies/config-a-snell-proxy
-            const p: Record<
+            const p = {} as Record<
                 string,
-                | string
-                | number
-                | {
-                      [key in string]: string
-                  }
-            > = {}
+                string | number | Record<string, string>
+            >
             p['name'] = this.prop.tag
             p['type'] = 'snell'
             p['server'] = this.prop.server
@@ -59,25 +55,15 @@ class SnellProxy extends BaseProxy<SnellProperties> {
             return '' // TODO:
         } else if (platform === Supported.Stash) {
             // ref: https://lancellc.gitbook.io/clash/clash-config-file/proxies/config-a-snell-proxy
-            const p = {} as Record<
-                string,
-                string | number | Record<string, string>
-            >
-            p['name'] = this.prop.tag
-            p['type'] = 'snell'
-            p['server'] = this.prop.server
-            p['port'] = this.prop.port
-            p['psk'] = this.prop.psk
-            if (typeof this.prop.version != undefined) {
-                p['version'] = this.prop.version
-            }
-            if (this.prop.mode) {
-                p['obfs-opts'] = {
-                    mode: this.prop.mode,
-                    host: this.prop.host,
+            try {
+                return this.parse(Supported.Clash)
+            } catch (error) {
+                if (error instanceof NotSupportedError) {
+                    throw new NotSupportedError(platform)
+                } else {
+                    throw error
                 }
             }
-            return yaml.dump([p])
         } else {
             throw new NotSupportedError(platform)
         }
