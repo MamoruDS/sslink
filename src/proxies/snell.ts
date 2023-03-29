@@ -57,6 +57,27 @@ class SnellProxy extends BaseProxy<SnellProperties> {
             return '' // TODO:
         } else if (platform === Supported.Loon) {
             return '' // TODO:
+        } else if (platform === Supported.Stash) {
+            // ref: https://lancellc.gitbook.io/clash/clash-config-file/proxies/config-a-snell-proxy
+            const p = {} as Record<
+                string,
+                string | number | Record<string, string>
+            >
+            p['name'] = this.prop.tag
+            p['type'] = 'snell'
+            p['server'] = this.prop.server
+            p['port'] = this.prop.port
+            p['psk'] = this.prop.psk
+            if (typeof this.prop.version != undefined) {
+                p['version'] = this.prop.version
+            }
+            if (this.prop.mode) {
+                p['obfs-opts'] = {
+                    mode: this.prop.mode,
+                    host: this.prop.host,
+                }
+            }
+            return yaml.dump([p])
         } else {
             throw new NotSupportedError(platform)
         }
