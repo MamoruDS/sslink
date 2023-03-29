@@ -27,6 +27,7 @@ type V2RayPluginTypes = 'websocket' | 'http2' | 'mkcp'
 type ObfsPluginOptions = {
     type: ObfPluginTypes
     host?: string
+    uri?: string // only for type == 'http'
 }
 
 type V2rayPluginOptions = {
@@ -82,6 +83,7 @@ class SSProxy extends BaseProxy<SSProperties> {
             p.push(oa('password', this.prop.password))
             p.push(oa('obfs', this.prop.obfs_plugin?.type))
             p.push(oa('obfs-host', this.prop.obfs_plugin?.host))
+            p.push(oa('obfs-uri', this.prop.obfs_plugin?.uri))
             p.push(oa('udp-relay', this.prop.udp_relay ? 'true' : undefined))
             p.push(oa('tfo', this.prop.fast_open ? 'true' : undefined))
             return this.prop.tag + ' = ' + undefinedFreeJoin(p, ', ')
@@ -124,6 +126,7 @@ class SSProxy extends BaseProxy<SSProperties> {
             if (!isUndef(this.prop.obfs_plugin?.type)) {
                 p.push(oa('obfs-name', this.prop.obfs_plugin.type))
                 p.push(oa('obfs-host', this.prop.obfs_plugin.host))
+                p.push(oa('obfs-uri', this.prop.obfs_plugin.uri))
             }
             p.push(oa('fast-open', this.prop.fast_open ? 'true' : undefined))
             p.push(oa('udp', this.prop.udp_relay ? 'true' : undefined))
