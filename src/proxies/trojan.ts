@@ -159,6 +159,35 @@ class TrojanProxy extends BaseProxy<TrojanProperties> {
                 }
             }
             return yaml.dump([p])
+        } else if (platform === Supported.Surfboard) {
+            const p: (string | number)[] = []
+            p.push('trojan')
+            p.push(this.prop.server)
+            p.push(this.prop.port)
+            p.push(oa('password', this.prop.password)) // TODO: required
+            p.push(oa('udp-relay', this.prop.udpRelay ? 'true' : undefined))
+            p.push(
+                oa(
+                    'skip-cert-verify',
+                    this.prop.certVerify ? 'true' : undefined
+                )
+            )
+            p.push(oa('sni', this.prop.sni))
+            if (this.prop.transport?.protocol === 'ws') {
+                p.push(oa('ws', 'true'))
+                p.push(oa('ws-path', this.prop.transport.path))
+                p.push(
+                    oa(
+                        'ws-headers',
+                        Object.entries(this.prop.transport.headers ?? {})
+                            .map(([key, val]) => {
+                                return `${key}:"${val}"`
+                            })
+                            .join('|') || undefined
+                    )
+                )
+            }
+            return this.prop.tag + ' = ' + undefinedFreeJoin(p, ', ') 
         } else {
             throw new NotSupportedError(platform)
         }
