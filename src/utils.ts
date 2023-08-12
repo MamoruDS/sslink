@@ -1,8 +1,12 @@
 import { TextPack } from './textpack'
 import { Supported } from './types'
 
+enum ParseFlags {
+    NONE = 0,
+    IGNORE_UNSUPPORTED = 1 << 0,
+}
 interface _PlatItem {
-    parse(platform: Supported): string
+    parse(platform: Supported, flags: ParseFlags): string
 }
 
 class CTR<T extends _PlatItem> {
@@ -32,12 +36,18 @@ class CTR<T extends _PlatItem> {
         }
     }
 
-    protected _stringify(platform: Supported): string[] {
-        return this._items.map((item) => item.parse(platform))
+    protected _stringify(
+        platform: Supported,
+        parseFlags: ParseFlags
+    ): string[] {
+        return this._items.map((item) => item.parse(platform, parseFlags))
     }
 
-    public stringify(platform: Supported): TextPack {
-        return new TextPack('unknown', this._stringify(platform).join('\n'))
+    public stringify(platform: Supported, parseFlags: ParseFlags): TextPack {
+        return new TextPack(
+            'unknown',
+            this._stringify(platform, parseFlags).join('\n')
+        )
     }
 }
 
@@ -61,4 +71,4 @@ const undefinedFreeJoin = <T = any>(
     return arr.filter((x) => typeof x != 'undefined').join(separator)
 }
 
-export { CTR, isUndef, optionalArgs, undefinedFreeJoin }
+export { CTR, ParseFlags, isUndef, optionalArgs, undefinedFreeJoin }

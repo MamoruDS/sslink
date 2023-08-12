@@ -1,7 +1,7 @@
 import { NotSupportedError } from '../constants'
 import { TextPack } from '../textpack'
 import { Supported } from '../types'
-import { CTR } from '../utils'
+import { CTR, ParseFlags } from '../utils'
 import {
     parse_valid_policy_item,
     BasePolicy,
@@ -22,8 +22,8 @@ class PolicyCtr<T extends BasePolicy = BasePolicy> extends CTR<T> {
         }
     }
 
-    public stringify(platform: Supported): TextPack {
-        const policies = this._stringify(platform).join('\n')
+    public stringify(platform: Supported, parseFlags: ParseFlags): TextPack {
+        const policies = this._stringify(platform, parseFlags).join('\n')
         if (platform === Supported.Clash) {
             return new TextPack('clash.policies', policies, (t) => {
                 return t.replace(/^/, 'proxy-groups:\n')

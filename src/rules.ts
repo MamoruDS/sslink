@@ -13,7 +13,7 @@ import {
     RuleType,
     Supported,
 } from './types'
-import { CTR, isUndef, undefinedFreeJoin } from './utils'
+import { CTR, ParseFlags, isUndef, undefinedFreeJoin } from './utils'
 
 type IP_Based_Options = {
     no_resolve?: boolean
@@ -39,7 +39,10 @@ class Rule {
         return this.properties
     }
 
-    public parse(platform: Supported): string | undefined {
+    public parse(
+        platform: Supported,
+        parseFlags: ParseFlags
+    ): string | undefined {
         let proxy = undefined
         if (!isUndef(this.prop.proxy)) {
             proxy = parse_valid_policy_item(this.prop.proxy, platform)
@@ -143,8 +146,8 @@ class RuleCtr extends CTR<Rule> {
         return rule
     }
 
-    public stringify(platform: Supported): TextPack {
-        const rules = this._stringify(platform)
+    public stringify(platform: Supported, parseFlags: ParseFlags): TextPack {
+        const rules = this._stringify(platform, parseFlags)
         if (platform === Supported.Clash) {
             return new TextPack('clash.rules', yaml.dump(rules), (t) => {
                 return t.replace(/^/, 'rules:\n')

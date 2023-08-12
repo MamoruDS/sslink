@@ -2,7 +2,7 @@ import { SSProxy } from './ss'
 import { SnellProxy } from './snell'
 import { TrojanProxy } from './trojan'
 import { BaseProxy } from './base'
-import { CTR } from '../utils'
+import { CTR, ParseFlags } from '../utils'
 import { NotSupportedError } from '../constants'
 import { TextPack } from '../textpack'
 import { Supported } from '../types'
@@ -19,8 +19,8 @@ class ProxyCtr<T extends BaseProxy = BaseProxy> extends CTR<T> {
     }
 
     // TODO: is this necessary?
-    public stringify(platform: Supported): TextPack {
-        const proxies = this._stringify(platform).join('\n')
+    public stringify(platform: Supported, parseFlags: ParseFlags): TextPack {
+        const proxies = this._stringify(platform, parseFlags).join('\n')
         if (platform === Supported.Clash) {
             return new TextPack('clash.proxies', proxies, (t) => {
                 return t.replace(/^/, 'proxies:\n')
