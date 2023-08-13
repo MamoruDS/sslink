@@ -1,9 +1,6 @@
 import * as yaml from 'js-yaml'
-import {
-    NotSupportedError,
-    RULE_SUPPORT_MAP_CLASH,
-    RULE_SUPPORT_MAP_SURGE,
-} from './constants'
+import { RULE_SUPPORT_MAP_CLASH, RULE_SUPPORT_MAP_SURGE } from './constants'
+import { NotSupportedError } from './errors'
 import { parse_valid_policy_item, ValidPolicyItem } from './policies'
 import { TextPack } from './textpack'
 import {

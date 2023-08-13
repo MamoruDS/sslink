@@ -1,4 +1,4 @@
-import { NotImplementedError } from '../constants'
+import { NotImplementedError } from '../errors'
 import { BaseProxy } from '../proxies'
 import { SpecialProxy, Supported } from '../types'
 

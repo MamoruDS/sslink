@@ -1,5 +1,5 @@
 import * as yaml from 'js-yaml'
-import { NotSupportedError } from '../constants'
+import { NotSupportedError } from '../errors'
 import { Supported } from '../types'
 import { isUndef, optionalArgs as oa, undefinedFreeJoin } from '../utils'
 import { BaseProxy } from './base'

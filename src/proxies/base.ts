@@ -1,4 +1,4 @@
-import { NotImplementedError } from '../constants'
+import { NotImplementedError, NotSupportedError } from '../errors'
 import { Supported } from '../types'
 
 type BaseProperties = {

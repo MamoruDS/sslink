@@ -1,5 +1,5 @@
 import * as yaml from 'js-yaml'
-import { NotSupportedError } from '../constants'
+import { NotSupportedError } from '../errors'
 import { Supported } from '../types'
 import { optionalArgs, undefinedFreeJoin } from '../utils'
 import { BasePolicy, ValidPolicyItem } from './base'

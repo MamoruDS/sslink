@@ -31,21 +31,10 @@ const RULE_SUPPORT_MAP_SURGE = {
     [RuleType.FINAL]: 'FINAL',
 }
 
-class NotImplementedError extends Error {}
-class NotSupportedError extends Error {
-    platform: any
-    constructor(platform: any) {
-        super()
-        this.platform = platform
-    }
-}
-
 export {
     SpecialProxy,
     RULE_SUPPORT_MAP_CLASH,
     RULE_SUPPORT_MAP_SURGE,
-    NotImplementedError,
-    NotSupportedError,
     //
     DIRECT,
     REJECT,

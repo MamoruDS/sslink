@@ -2,10 +2,10 @@ import { SSProxy } from './ss'
 import { SnellProxy } from './snell'
 import { TrojanProxy } from './trojan'
 import { BaseProxy } from './base'
-import { CTR, ParseFlags } from '../utils'
-import { NotSupportedError } from '../constants'
+import { NotSupportedError } from '../errors'
 import { TextPack } from '../textpack'
 import { Supported } from '../types'
+import { CTR, ParseFlags } from '../utils'
 
 type SupportedProxy = SSProxy | SnellProxy | TrojanProxy
 

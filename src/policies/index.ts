@@ -1,4 +1,4 @@
-import { NotSupportedError } from '../constants'
+import { NotSupportedError } from '../errors'
 import { TextPack } from '../textpack'
 import { Supported } from '../types'
 import { CTR, ParseFlags } from '../utils'
