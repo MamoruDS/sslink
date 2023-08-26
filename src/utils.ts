@@ -1,3 +1,4 @@
+import { NotSupportedError } from './errors'
 import { TextPack } from './textpack'
 import { Supported } from './types'
 
@@ -39,8 +40,23 @@ class CTR<T extends _PlatItem> {
     protected _stringify(
         platform: Supported,
         parseFlags: ParseFlags
-    ): string[] {
-        return this._items.map((item) => item.parse(platform, parseFlags))
+    ): (string | undefined | null)[] {
+        // return this._items.map((item) => item.parse(platform, parseFlags))
+        return this._items.map((item) => {
+            try {
+                return item.parse(platform, parseFlags)
+            } catch (err) {
+                if (err instanceof NotSupportedError) {
+                    if (parseFlags & ParseFlags.IGNORE_UNSUPPORTED) {
+                        return null
+                    } else {
+                        throw err
+                    }
+                } else {
+                    throw err
+                }
+            }
+        })
     }
 
     public stringify(platform: Supported, parseFlags: ParseFlags): TextPack {
