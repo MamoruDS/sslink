@@ -13,16 +13,15 @@ class TextPack {
         this._standaloneCb = standaloneCb
     }
 
-    public get text(): string {
-        return this._body
-    }
-
-    public standalone(): string {
-        if (typeof this._standaloneCb == 'function') {
-            return this._standaloneCb(this._body)
-        } else {
-            return this.text
+    public eval(options?: { standalone?: boolean }): string {
+        let text: string = undefined
+        if (options?.standalone) {
+            if (typeof this._standaloneCb == 'function') {
+                text = this._standaloneCb(this._body)
+            }
         }
+        text = text ?? this._body
+        return text.trimEnd() + '\n'
     }
 }
 
