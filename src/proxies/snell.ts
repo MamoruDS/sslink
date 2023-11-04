@@ -27,6 +27,13 @@ class SnellProxy extends BaseProxy<SnellProperties> {
             p['port'] = this.prop.port
             p['psk'] = this.prop.psk
             if (typeof this.prop.version != undefined) {
+                if (this.prop.version > 3) {
+                    throw new UnsupportedProxyError(
+                        this,
+                        platform,
+                        'version > 3'
+                    )
+                }
                 p['version'] = this.prop.version
             }
             if (this.prop.mode) {
