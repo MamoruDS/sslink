@@ -146,17 +146,31 @@ class RuleCtr extends CTR<Rule> {
     public stringify(platform: Supported, parseFlags: ParseFlags): TextPack {
         const rules = this._stringify(platform, parseFlags)
         if (platform === Supported.Clash) {
-            return new TextPack('clash.rules', yaml.dump(rules), (t) => {
-                return t.replace(/^/, 'rules:\n')
+            return new TextPack(yaml.dump(rules), {
+                localTitle: 'rules:',
+            })
+        } else if (platform === Supported.Loon) {
+            return new TextPack(rules.join('\n'), {
+                localTitle: '[Rule]',
+            })
+        } else if (platform === Supported.QuantumultX) {
+            return new TextPack(rules.join('\n'), {
+                localTitle: '[filter_local]',
+            })
+        } else if (platform === Supported.Stash) {
+            return new TextPack(yaml.dump(rules), {
+                localTitle: 'rules:',
+            })
+        } else if (platform === Supported.Surfboard) {
+            return new TextPack(rules.join('\n'), {
+                localTitle: '[Rule]',
             })
         } else if (platform === Supported.Surge) {
-            return new TextPack('surge.rules', rules.join('\n'))
-        } else if (platform === Supported.Surfboard) {
-            return new TextPack('arbitrary.rules', rules.join('\n'), (t) => {
-                return t.replace(/^/, '[Rule]\n')
+            return new TextPack(rules.join('\n'), {
+                localTitle: '[Rule]',
             })
         } else {
-            throw new NotSupportedError(platform)
+            return new TextPack(rules.join('\n'))
         }
     }
 }

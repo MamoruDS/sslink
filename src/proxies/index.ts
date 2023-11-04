@@ -2,7 +2,6 @@ import { SSProxy } from './ss'
 import { SnellProxy } from './snell'
 import { TrojanProxy } from './trojan'
 import { BaseProxy } from './base'
-import { NotSupportedError } from '../errors'
 import { TextPack } from '../textpack'
 import { Supported } from '../types'
 import { CTR, ParseFlags } from '../utils'
@@ -22,21 +21,31 @@ class ProxyCtr<T extends BaseProxy = BaseProxy> extends CTR<T> {
     public stringify(platform: Supported, parseFlags: ParseFlags): TextPack {
         const proxies = this._stringify(platform, parseFlags).join('\n')
         if (platform === Supported.Clash) {
-            return new TextPack('clash.proxies', proxies, (t) => {
-                return t.replace(/^/, 'proxies:\n')
+            return new TextPack(proxies, {
+                localTitle: 'proxies:',
+            })
+        } else if (platform === Supported.Loon) {
+            return new TextPack(proxies, {
+                localTitle: '[Proxy]',
+            })
+        } else if (platform === Supported.QuantumultX) {
+            return new TextPack(proxies, {
+                localTitle: '[server_local]',
+            })
+        } else if (platform === Supported.Stash) {
+            return new TextPack(proxies, {
+                localTitle: 'proxies:',
+            })
+        } else if (platform === Supported.Surfboard) {
+            return new TextPack(proxies, {
+                localTitle: '[Proxy]',
             })
         } else if (platform === Supported.Surge) {
-            return new TextPack('surge.proxies', proxies)
-        } else if (platform === Supported.QuantumultX) {
-            return new TextPack('quantumultX.proxies', proxies)
-        } else if (platform === Supported.Loon) {
-            return new TextPack('quantumultX.proxies', proxies)
-        } else if (platform === Supported.Surfboard) {
-            return new TextPack('quantumultX.proxies', proxies)
-        } else if (platform === Supported.Stash) {
-            return new TextPack('quantumultX.proxies', proxies)
+            return new TextPack(proxies, {
+                localTitle: '[Proxy]',
+            })
         } else {
-            throw new NotSupportedError(platform)
+            return new TextPack(proxies)
         }
     }
 }

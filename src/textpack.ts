@@ -1,26 +1,21 @@
 class TextPack {
-    private readonly _reg: string
     private _body: string
-    private _standaloneCb: (data: string) => string
+    private _localTitle: string
 
-    constructor(
-        reg: string,
-        body: string,
-        standaloneCb?: (data: string) => string
-    ) {
-        this._reg = reg
+    constructor(body: string, options?: { localTitle?: string }) {
         this._body = body
-        this._standaloneCb = standaloneCb
+        this._localTitle = options?.localTitle
     }
 
-    public eval(options?: { standalone?: boolean }): string {
-        let text: string = undefined
-        if (options?.standalone) {
-            if (typeof this._standaloneCb == 'function') {
-                text = this._standaloneCb(this._body)
+    public eval(options?: { isLocalBlock?: boolean }): string {
+        let text: string = this._body
+        if (options?.isLocalBlock) {
+            if (this._localTitle) {
+                text = this._localTitle + '\n' + text
+            } else {
+                throw new Error('local title is required for local block')
             }
         }
-        text = text ?? this._body
         return text.trimEnd() + '\n'
     }
 }

@@ -25,17 +25,31 @@ class PolicyCtr<T extends BasePolicy = BasePolicy> extends CTR<T> {
     public stringify(platform: Supported, parseFlags: ParseFlags): TextPack {
         const policies = this._stringify(platform, parseFlags).join('\n')
         if (platform === Supported.Clash) {
-            return new TextPack('clash.policies', policies, (t) => {
-                return t.replace(/^/, 'proxy-groups:\n')
+            return new TextPack(policies, {
+                localTitle: 'proxy-groups:',
+            })
+        } else if (platform === Supported.Loon) {
+            return new TextPack(policies, {
+                localTitle: '[Proxy Group]',
+            })
+        } else if (platform === Supported.QuantumultX) {
+            return new TextPack(policies, {
+                localTitle: '[policy]',
+            })
+        } else if (platform === Supported.Stash) {
+            return new TextPack(policies, {
+                localTitle: 'proxy-groups:',
+            })
+        } else if (platform === Supported.Surfboard) {
+            return new TextPack(policies, {
+                localTitle: '[Proxy Group]',
             })
         } else if (platform === Supported.Surge) {
-            return new TextPack('surge.policies', policies)
-        } else if (platform === Supported.Surfboard) {
-            return new TextPack('surfboard.policies', policies, (t) => {
-                return t.replace(/^/, '[Proxy Group]\n')
+            return new TextPack(policies, {
+                localTitle: '[Proxy Group]',
             })
         } else {
-            throw new NotSupportedError(platform)
+            return new TextPack(policies)
         }
     }
 }
