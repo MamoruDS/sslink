@@ -151,6 +151,10 @@ class RuleCtr extends CTR<Rule> {
             })
         } else if (platform === Supported.Surge) {
             return new TextPack('surge.rules', rules.join('\n'))
+        } else if (platform === Supported.Surfboard) {
+            return new TextPack('arbitrary.rules', rules.join('\n'), (t) => {
+                return t.replace(/^/, '[Rule]\n')
+            })
         } else {
             throw new NotSupportedError(platform)
         }

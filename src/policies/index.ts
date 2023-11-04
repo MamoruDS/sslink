@@ -30,6 +30,10 @@ class PolicyCtr<T extends BasePolicy = BasePolicy> extends CTR<T> {
             })
         } else if (platform === Supported.Surge) {
             return new TextPack('surge.policies', policies)
+        } else if (platform === Supported.Surfboard) {
+            return new TextPack('surfboard.policies', policies, (t) => {
+                return t.replace(/^/, '[Proxy Group]\n')
+            })
         } else {
             throw new NotSupportedError(platform)
         }
