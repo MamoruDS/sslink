@@ -1,4 +1,4 @@
-import { NotImplementedError } from '../errors'
+import { NotImplementedError, NotSupportedError } from '../errors'
 import { BaseProxy } from '../proxies'
 import { SpecialProxy, Supported } from '../types'
 
@@ -18,6 +18,14 @@ const parse_valid_policy_item = (
         return item.name
     } else {
         throw new Error('Unknown policy item')
+    }
+}
+
+class UnsupportedProxyError<T extends BasePolicy> extends NotSupportedError {
+    policy: T
+    constructor(proxy: T, platform: Supported, desc?: string) {
+        super(platform, desc)
+        this.policy = proxy
     }
 }
 
@@ -55,4 +63,10 @@ class BasePolicy {
     }
 }
 
-export { parse_valid_policy_item, BasePolicy, SpecialProxy, ValidPolicyItem }
+export {
+    parse_valid_policy_item,
+    BasePolicy,
+    SpecialProxy,
+    UnsupportedProxyError,
+    ValidPolicyItem,
+}

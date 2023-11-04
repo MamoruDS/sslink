@@ -1,8 +1,8 @@
 import * as yaml from 'js-yaml'
-import { NotSupportedError } from '../errors'
+
 import { Supported } from '../types'
 import { optionalArgs, undefinedFreeJoin } from '../utils'
-import { BasePolicy, ValidPolicyItem } from './base'
+import { BasePolicy, UnsupportedProxyError, ValidPolicyItem } from './base'
 
 class UrlTestPolicyProperties {
     url: string
@@ -47,7 +47,7 @@ class UrlTestPolicy extends BasePolicy {
             p.push(optionalArgs('timeout', this.prop.timeout))
             return this.name + ' = ' + undefinedFreeJoin(p, ', ')
         } else {
-            throw new NotSupportedError(platform)
+            throw new UnsupportedProxyError(this, platform)
         }
     }
 }

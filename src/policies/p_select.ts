@@ -1,8 +1,8 @@
 import * as yaml from 'js-yaml'
-import { NotSupportedError } from '../errors'
+
 import { Supported } from '../types'
 import { undefinedFreeJoin } from '../utils'
-import { BasePolicy, ValidPolicyItem } from './base'
+import { BasePolicy, UnsupportedProxyError, ValidPolicyItem } from './base'
 
 class SelectPolicy extends BasePolicy {
     // public selected?: string
@@ -26,7 +26,7 @@ class SelectPolicy extends BasePolicy {
             p.push(...proxies)
             return this.name + ' = ' + undefinedFreeJoin(p, ', ')
         } else {
-            throw new NotSupportedError(platform)
+            throw new UnsupportedProxyError(this, platform)
         }
     }
 }
