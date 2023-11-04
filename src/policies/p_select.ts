@@ -31,15 +31,15 @@ class SelectPolicy extends BasePolicy {
                 proxies,
             }
             return yaml.dump([p])
+        } else if (platform === Supported.Surfboard) {
+            // ref: https://getsurfboard.com/docs/profile-format/proxygroup/select
+            return this.parse(Supported.Surge)
         } else if (platform === Supported.Surge) {
             // ref: https://manual.nssurge.com/policy/group.html#manual-selection-group
             const p: string[] = []
             p.push('select')
             p.push(...proxies)
             return this.name + ' = ' + undefinedFreeJoin(p, ', ')
-        } else if (platform === Supported.Surfboard) {
-            // ref: https://getsurfboard.com/docs/profile-format/proxygroup/select
-            return this.parse(Supported.Surge)
         } else {
             throw new UnsupportedProxyError(this, platform)
         }

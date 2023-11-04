@@ -1,4 +1,5 @@
 class NotImplementedError extends Error {}
+
 class NotSupportedError extends Error {
     platform: any
     desc: string

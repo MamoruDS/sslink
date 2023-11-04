@@ -1,4 +1,5 @@
 import * as yaml from 'js-yaml'
+
 import { RecStr, Supported } from '../types'
 import { optionalArgs as oa, undefinedFreeJoin } from '../utils'
 import { BaseProxy, UnsupportedProxyError } from './base'
@@ -63,50 +64,6 @@ class TrojanProxy extends BaseProxy<TrojanProperties> {
                 }
             }
             return yaml.dump([p])
-        } else if (platform === Supported.Surge) {
-            // ref: https://manual.nssurge.com/policy/proxy.html
-            const p: (string | number)[] = []
-            p.push('trojan')
-            p.push(this.prop.server)
-            p.push(this.prop.port)
-            p.push(oa('password', this.prop.password))
-            p.push(oa('skip-cert-verify', !this.prop.certVerify || undefined))
-            p.push(oa('sni', this.prop.sni))
-            if (this.prop.transport?.protocol === 'ws') {
-                p.push(oa('ws', true))
-                p.push(oa('ws-path', this.prop.transport.path))
-                p.push(
-                    oa(
-                        'ws-headers',
-                        Object.entries(this.prop.transport.headers ?? {})
-                            .map(([key, val]) => {
-                                return `${key}:"${val}"`
-                            })
-                            .join('|') || undefined
-                    )
-                )
-            }
-            // p.push(oa('udp-relay', this.prop.udpRelay)) // TODO:
-            p.push(oa('tfo', this.prop.fastOpen))
-            return this.prop.tag + ' = ' + undefinedFreeJoin(p, ', ')
-        } else if (platform === Supported.QuantumultX) {
-            // ref: https://github.com/crossutility/Quantumult-X/blob/d30a160eb093b3be175ea5eeeff0648db50b2a20/sample.conf#L159
-            const p = {} as RecStr<string | number | boolean | null>
-            p['trojan'] = this.prop.server + ':' + this.prop.port
-            p['password'] = this.prop.password ?? null
-            p['over-tls'] = this.prop.tls || null
-            p['tls-host'] = this.prop.sni || null
-            p['tls-verification'] = this.prop.certVerify
-            p['tls13'] = this.prop.tls13 || null
-            p['fast-open'] = this.prop.fastOpen
-            p['udp-relay'] = this.prop.udpRelay
-            p['tag'] = this.prop.tag
-            return undefinedFreeJoin(
-                Object.keys(p).map((key) => {
-                    if (p[key] !== null) return key + '=' + p[key]
-                }),
-                ', '
-            )
         } else if (platform === Supported.Loon) {
             // https://loon0x00.github.io/LoonManual/#/cn/node
             const p: (string | number)[] = []
@@ -132,6 +89,24 @@ class TrojanProxy extends BaseProxy<TrojanProperties> {
                 p.push(oa('host', this.prop.transport.headers?.Host))
             }
             return this.prop.tag + ' = ' + undefinedFreeJoin(p, ',')
+        } else if (platform === Supported.QuantumultX) {
+            // ref: https://github.com/crossutility/Quantumult-X/blob/d30a160eb093b3be175ea5eeeff0648db50b2a20/sample.conf#L159
+            const p = {} as RecStr<string | number | boolean | null>
+            p['trojan'] = this.prop.server + ':' + this.prop.port
+            p['password'] = this.prop.password ?? null
+            p['over-tls'] = this.prop.tls || null
+            p['tls-host'] = this.prop.sni || null
+            p['tls-verification'] = this.prop.certVerify
+            p['tls13'] = this.prop.tls13 || null
+            p['fast-open'] = this.prop.fastOpen
+            p['udp-relay'] = this.prop.udpRelay
+            p['tag'] = this.prop.tag
+            return undefinedFreeJoin(
+                Object.keys(p).map((key) => {
+                    if (p[key] !== null) return key + '=' + p[key]
+                }),
+                ', '
+            )
         } else if (platform === Supported.Stash) {
             // ref: https://lancellc.gitbook.io/clash/clash-config-file/proxies/config-a-torjan-proxy
             const p = {} as RecStr<string | number | boolean | RecStr<any>>
@@ -187,6 +162,32 @@ class TrojanProxy extends BaseProxy<TrojanProperties> {
                     )
                 )
             }
+            return this.prop.tag + ' = ' + undefinedFreeJoin(p, ', ')
+        } else if (platform === Supported.Surge) {
+            // ref: https://manual.nssurge.com/policy/proxy.html
+            const p: (string | number)[] = []
+            p.push('trojan')
+            p.push(this.prop.server)
+            p.push(this.prop.port)
+            p.push(oa('password', this.prop.password))
+            p.push(oa('skip-cert-verify', !this.prop.certVerify || undefined))
+            p.push(oa('sni', this.prop.sni))
+            if (this.prop.transport?.protocol === 'ws') {
+                p.push(oa('ws', true))
+                p.push(oa('ws-path', this.prop.transport.path))
+                p.push(
+                    oa(
+                        'ws-headers',
+                        Object.entries(this.prop.transport.headers ?? {})
+                            .map(([key, val]) => {
+                                return `${key}:"${val}"`
+                            })
+                            .join('|') || undefined
+                    )
+                )
+            }
+            // p.push(oa('udp-relay', this.prop.udpRelay)) // TODO:
+            p.push(oa('tfo', this.prop.fastOpen))
             return this.prop.tag + ' = ' + undefinedFreeJoin(p, ', ')
         } else {
             throw new UnsupportedProxyError(this, platform)

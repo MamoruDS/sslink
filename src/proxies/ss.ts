@@ -1,4 +1,5 @@
 import * as yaml from 'js-yaml'
+
 import { Supported } from '../types'
 import { isUndef, optionalArgs as oa, undefinedFreeJoin } from '../utils'
 import { BaseProxy, UnsupportedProxyError } from './base'
@@ -77,20 +78,22 @@ class SSProxy extends BaseProxy<SSProperties> {
             }
             // do not support v2ray for now
             return yaml.dump([p])
-        } else if (platform === Supported.Surge) {
-            // ref: https://manual.nssurge.com/policy/proxy.html
+        } else if (platform === Supported.Loon) {
+            // ref: https://loon0x00.github.io/LoonManual/#/cn/node
             const p: (string | number)[] = []
-            p.push('ss')
+            p.push('Shadowsocks')
             p.push(this.prop.server)
             p.push(this.prop.port)
-            p.push(oa('encrypt-method', this.prop.method))
-            p.push(oa('password', this.prop.password))
-            p.push(oa('obfs', this.prop.obfs_plugin?.type))
-            p.push(oa('obfs-host', this.prop.obfs_plugin?.host))
-            p.push(oa('obfs-uri', this.prop.obfs_plugin?.uri))
-            p.push(oa('udp-relay', this.prop.udp_relay ? 'true' : undefined))
-            p.push(oa('tfo', this.prop.fast_open ? 'true' : undefined))
-            return this.prop.tag + ' = ' + undefinedFreeJoin(p, ', ')
+            p.push(this.prop.method)
+            p.push(`"${this.prop.password}"`)
+            if (!isUndef(this.prop.obfs_plugin?.type)) {
+                p.push(oa('obfs-name', this.prop.obfs_plugin.type))
+                p.push(oa('obfs-host', this.prop.obfs_plugin.host))
+                p.push(oa('obfs-uri', this.prop.obfs_plugin.uri))
+            }
+            p.push(oa('fast-open', this.prop.fast_open ? 'true' : undefined))
+            p.push(oa('udp', this.prop.udp_relay ? 'true' : undefined))
+            return this.prop.tag + ' = ' + undefinedFreeJoin(p, ',')
         } else if (platform === Supported.QuantumultX) {
             // ref: https://github.com/crossutility/Quantumult-X/blob/d30a160eb093b3be175ea5eeeff0648db50b2a20/sample.conf#L131
             const p = {} as Record<string, string | number | boolean | null>
@@ -119,22 +122,6 @@ class SSProxy extends BaseProxy<SSProperties> {
                 }),
                 ', '
             )
-        } else if (platform === Supported.Loon) {
-            // ref: https://loon0x00.github.io/LoonManual/#/cn/node
-            const p: (string | number)[] = []
-            p.push('Shadowsocks')
-            p.push(this.prop.server)
-            p.push(this.prop.port)
-            p.push(this.prop.method)
-            p.push(`"${this.prop.password}"`)
-            if (!isUndef(this.prop.obfs_plugin?.type)) {
-                p.push(oa('obfs-name', this.prop.obfs_plugin.type))
-                p.push(oa('obfs-host', this.prop.obfs_plugin.host))
-                p.push(oa('obfs-uri', this.prop.obfs_plugin.uri))
-            }
-            p.push(oa('fast-open', this.prop.fast_open ? 'true' : undefined))
-            p.push(oa('udp', this.prop.udp_relay ? 'true' : undefined))
-            return this.prop.tag + ' = ' + undefinedFreeJoin(p, ',')
         } else if (platform === Supported.Stash) {
             // ref: https://stash.wiki/en/proxy-protocols/proxy-types#shadowsocks
             const p = {} as Record<
@@ -167,6 +154,20 @@ class SSProxy extends BaseProxy<SSProperties> {
             p.push(oa('obfs-host', this.prop.obfs_plugin?.host))
             p.push(oa('obfs-uri', this.prop.obfs_plugin?.uri))
             p.push(oa('udp-relay', this.prop.udp_relay ? 'true' : undefined))
+            return this.prop.tag + ' = ' + undefinedFreeJoin(p, ', ')
+        } else if (platform === Supported.Surge) {
+            // ref: https://manual.nssurge.com/policy/proxy.html
+            const p: (string | number)[] = []
+            p.push('ss')
+            p.push(this.prop.server)
+            p.push(this.prop.port)
+            p.push(oa('encrypt-method', this.prop.method))
+            p.push(oa('password', this.prop.password))
+            p.push(oa('obfs', this.prop.obfs_plugin?.type))
+            p.push(oa('obfs-host', this.prop.obfs_plugin?.host))
+            p.push(oa('obfs-uri', this.prop.obfs_plugin?.uri))
+            p.push(oa('udp-relay', this.prop.udp_relay ? 'true' : undefined))
+            p.push(oa('tfo', this.prop.fast_open ? 'true' : undefined))
             return this.prop.tag + ' = ' + undefinedFreeJoin(p, ', ')
         } else {
             throw new UnsupportedProxyError(this, platform)
