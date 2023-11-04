@@ -1,8 +1,7 @@
 import * as yaml from 'js-yaml'
-import { NotSupportedError } from '../errors'
 import { RecStr, Supported } from '../types'
 import { optionalArgs as oa, undefinedFreeJoin } from '../utils'
-import { BaseProxy } from './base'
+import { BaseProxy, UnsupportedProxyError } from './base'
 
 type TransportWSConfig = {
     path?: string
@@ -187,9 +186,9 @@ class TrojanProxy extends BaseProxy<TrojanProperties> {
                     )
                 )
             }
-            return this.prop.tag + ' = ' + undefinedFreeJoin(p, ', ') 
+            return this.prop.tag + ' = ' + undefinedFreeJoin(p, ', ')
         } else {
-            throw new NotSupportedError(platform)
+            throw new UnsupportedProxyError(this, platform)
         }
     }
 }

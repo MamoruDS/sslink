@@ -1,8 +1,7 @@
 import * as yaml from 'js-yaml'
-import { NotSupportedError } from '../errors'
 import { Supported } from '../types'
 import { isUndef, optionalArgs as oa, undefinedFreeJoin } from '../utils'
-import { BaseProxy } from './base'
+import { BaseProxy, UnsupportedProxyError } from './base'
 
 type SSMethods =
     | 'rc4' // -stash
@@ -153,7 +152,7 @@ class SSProxy extends BaseProxy<SSProperties> {
             // do not support v2ray for now
             return yaml.dump([p])
         } else {
-            throw new NotSupportedError(platform)
+            throw new UnsupportedProxyError(this, platform)
         }
     }
 }

@@ -1,8 +1,7 @@
 import * as yaml from 'js-yaml'
-import { NotSupportedError } from '../errors'
 import { Supported } from '../types'
 import { optionalArgs as oa, undefinedFreeJoin } from '../utils'
-import { BaseProxy } from './base'
+import { BaseProxy, UnsupportedProxyError } from './base'
 
 type SnellServerVersion = 1 | 2 | 3
 
@@ -50,22 +49,26 @@ class SnellProxy extends BaseProxy<SnellProperties> {
             p.push(oa('tfo', this.prop.fast_open))
             return this.prop.tag + ' = ' + undefinedFreeJoin(p, ', ')
         } else if (platform === Supported.QuantumultX) {
-            return '' // TODO:
+            throw new UnsupportedProxyError(this, platform)
         } else if (platform === Supported.Loon) {
-            return '' // TODO:
+            throw new UnsupportedProxyError(this, platform)
         } else if (platform === Supported.Stash) {
             // ref: https://lancellc.gitbook.io/clash/clash-config-file/proxies/config-a-snell-proxy
             try {
                 return this.parse(Supported.Clash)
             } catch (error) {
-                if (error instanceof NotSupportedError) {
-                    throw new NotSupportedError(platform)
+                if (error instanceof UnsupportedProxyError) {
+                    throw new UnsupportedProxyError(
+                        error.proxy,
+                        platform,
+                        error.desc
+                    )
                 } else {
                     throw error
                 }
             }
         } else {
-            throw new NotSupportedError(platform)
+            throw new UnsupportedProxyError(this, platform)
         }
     }
 }
