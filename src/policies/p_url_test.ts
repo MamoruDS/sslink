@@ -1,7 +1,7 @@
 import * as yaml from 'js-yaml'
 
 import { Supported } from '../types'
-import { optionalArgs, undefinedFreeJoin } from '../utils'
+import { optionalArgs as oa, undefinedFreeJoin } from '../utils'
 import { BasePolicy, UnsupportedProxyError, ValidPolicyItem } from './base'
 
 class UrlTestPolicyProperties {
@@ -9,6 +9,7 @@ class UrlTestPolicyProperties {
     interval: number
     tolerance?: number
     timeout?: number
+    hidden?: boolean // +surfboard
 }
 
 class UrlTestPolicy extends BasePolicy {
@@ -38,13 +39,43 @@ class UrlTestPolicy extends BasePolicy {
                 proxies,
             }
             return yaml.dump([p])
-        } else if (platform === Supported.Surge) {
+        } else if (platform === Supported.Loon) {
+            // ref: https://loon0x00.github.io/LoonManual/#/cn/policygroup?id=url-test-%e7%ad%96%e7%95%a5%e7%bb%84
             const p: string[] = []
             p.push('url-test')
             p.push(...proxies)
-            p.push(optionalArgs('interval', this.prop.interval))
-            p.push(optionalArgs('tolerance', this.prop.tolerance))
-            p.push(optionalArgs('timeout', this.prop.timeout))
+            p.push(oa('url', this.prop.url))
+            p.push(oa('interval', this.prop.interval))
+            p.push(oa('tolerance', this.prop.tolerance))
+            return this.name + ' = ' + undefinedFreeJoin(p, ', ')
+        } else if (platform === Supported.Stash) {
+            // ref: https://stash.wiki/en/proxy-protocols/proxy-groups#url-test
+            const p = {
+                name: this.name,
+                type: 'url-test',
+                proxies,
+                interval: this.prop.interval,
+            }
+            return yaml.dump([p])
+        } else if (platform === Supported.Surge) {
+            // ref https://manual.nssurge.com/policy/group.html#automatic-testing-group
+            const p: string[] = []
+            p.push('url-test')
+            p.push(...proxies)
+            p.push(oa('interval', this.prop.interval))
+            p.push(oa('tolerance', this.prop.tolerance))
+            p.push(oa('timeout', this.prop.timeout))
+            return this.name + ' = ' + undefinedFreeJoin(p, ', ')
+        } else if (platform === Supported.Surfboard) {
+            // ref: https://getsurfboard.com/docs/profile-format/proxygroup/auto
+            const p: string[] = []
+            p.push('url-test')
+            p.push(...proxies)
+            p.push(oa('url', this.prop.url))
+            p.push(oa('interval', this.prop.interval))
+            p.push(oa('tolerance', this.prop.tolerance))
+            p.push(oa('timeout', this.prop.timeout))
+            p.push(oa('hidden', this.prop.hidden ? 'true' : undefined))
             return this.name + ' = ' + undefinedFreeJoin(p, ', ')
         } else {
             throw new UnsupportedProxyError(this, platform)
