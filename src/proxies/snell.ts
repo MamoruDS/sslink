@@ -74,6 +74,8 @@ class SnellProxy extends BaseProxy<SnellProperties> {
                     throw error
                 }
             }
+        } else if (platform === Supported.Surfboard) {
+            throw new UnsupportedProxyError(this, platform)
         } else {
             throw new UnsupportedProxyError(this, platform)
         }

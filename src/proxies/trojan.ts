@@ -159,6 +159,7 @@ class TrojanProxy extends BaseProxy<TrojanProperties> {
             }
             return yaml.dump([p])
         } else if (platform === Supported.Surfboard) {
+            // ref: https://getsurfboard.com/docs/profile-format/proxy/external-proxy/trojan
             const p: (string | number)[] = []
             p.push('trojan')
             p.push(this.prop.server)

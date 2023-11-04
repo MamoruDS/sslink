@@ -19,6 +19,11 @@ type SSMethods =
     | 'chacha20-ietf'
     | 'chacha20-ietf-poly1305'
     | 'xchacha20-ietf-poly1305'
+    | 'bf-cfb' // +surfboard
+    | 'camellia-128-cfb' // +surfboard
+    | 'camellia-192-cfb' // +surfboard
+    | 'camellia-256-cfb' // +surfboard
+    | 'salsa20' // +surfboard
 
 type ObfPluginTypes = 'http' | 'tls'
 type V2RayPluginTypes = 'websocket' | 'http2' | 'mkcp'
@@ -151,6 +156,18 @@ class SSProxy extends BaseProxy<SSProperties> {
             }
             // do not support v2ray for now
             return yaml.dump([p])
+        } else if (platform === Supported.Surfboard) {
+            const p: (string | number)[] = []
+            p.push('ss')
+            p.push(this.prop.server)
+            p.push(this.prop.port)
+            p.push(oa('encrypt-method', this.prop.method))
+            p.push(oa('password', this.prop.password))
+            p.push(oa('obfs', this.prop.obfs_plugin?.type))
+            p.push(oa('obfs-host', this.prop.obfs_plugin?.host))
+            p.push(oa('obfs-uri', this.prop.obfs_plugin?.uri))
+            p.push(oa('udp-relay', this.prop.udp_relay ? 'true' : undefined))
+            return this.prop.tag + ' = ' + undefinedFreeJoin(p, ', ')
         } else {
             throw new UnsupportedProxyError(this, platform)
         }
