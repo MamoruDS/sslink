@@ -144,7 +144,7 @@ class TrojanProxy extends BaseProxy<TrojanProperties> {
             p.push(
                 oa(
                     'skip-cert-verify',
-                    this.prop.certVerify ? 'true' : undefined
+                    this.prop.certVerify ? undefined : 'true'
                 )
             )
             p.push(oa('sni', this.prop.sni))
